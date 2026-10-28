@@ -2,7 +2,7 @@
 (() => {
   // Where sign-ups are sent. Set to a form endpoint (e.g. https://formsubmit.co/ajax/<address>).
   // Until it's set, buttons keep opening the Tally form directly, so no sign-up is lost.
-  const ENDPOINT = "";
+  const ENDPOINT = "https://formsubmit.co/ajax/opataebubechukwu@gmail.com";
   const TALLY = "https://tally.so/r/q4xPo5";
 
   const wl = document.getElementById("wl"), form = document.getElementById("wlForm");
