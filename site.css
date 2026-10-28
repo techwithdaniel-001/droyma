@@ -1605,3 +1605,30 @@ html.wl-open { overflow: hidden; }
 
 /* Hidden dialog must never catch taps */
 .wl[hidden] { display: none !important; }
+
+/* ---------- v12 · Mobile UX fixes ---------- */
+@media (min-width: 700px) { .m-br { display: none; } }
+:root { --ink-3: #6e7076; }
+.h2 .muted { color: #8b8d92; }
+@media (max-width: 600px) { .promo { display: none; } }
+.after-night { display: flex; justify-content: center; padding: 64px 16px 0; background: var(--paper); }
+.swipe-hint { display: none; }
+@media (max-width: 700px) {
+  .swipe-hint { display: block; text-align: right; font-size: 13px; color: var(--ink-3); margin: 0 0 10px; }
+  .cmp-scroll { -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent); mask-image: linear-gradient(90deg, #000 88%, transparent); }
+}
+.why-list button { color: #8b8d92; min-height: 44px; }
+.why-list li.is-active button { color: var(--ink); }
+.why-timer { display: none; }
+@media (max-width: 899px) { .why-v1 .why-media { order: -1; margin-bottom: 24px; } }
+@media (max-width: 800px) { .night { height: 340vh; } }
+@media (max-width: 700px) { .universe { height: 290vh; } }
+.sx footer a { display: inline-block; padding: 12px 0; margin: -12px 0; }
+.f-cols a { padding-block: 10px; }
+.link-cta { min-height: 44px; display: inline-flex; align-items: center; }
+.wl-x { width: 44px; height: 44px; }
+.hero-micro, .closing-free, .pb-cta small { font-size: 14px; }
+.nav-cta { font-size: 14px; }
+@media (max-width: 800px) { .ns-labels span:not(.is-on) { opacity: 0; } }
+.why-timer { display: none !important; }
+@media (max-width: 699px) { .d-br { display: none; } }

@@ -10,7 +10,9 @@
   if (intro) {
     const variant = new URLSearchParams(location.search).get("intro") === "sky" ? "sky" : "black";
     intro.classList.add(`opening-${variant}`);
-    if (reduced) intro.remove();
+    let seen = false;
+    try { seen = !!sessionStorage.getItem("droymaIntro"); sessionStorage.setItem("droymaIntro", "1"); } catch (_) {}
+    if (reduced || seen || new URLSearchParams(location.search).has("nointro")) intro.remove();
     else {
       document.documentElement.classList.add("intro-lock");
       const line = intro.querySelector(".intro-line");
@@ -24,11 +26,11 @@
       };
       const start = () => requestAnimationFrame(() => {
         intro.classList.add("go");
-        setTimeout(finish, 2900);
+        setTimeout(finish, 1800);
       });
       document.readyState === "complete" ? start() : window.addEventListener("load", start, { once: true });
       setTimeout(() => { if (!intro.classList.contains("go")) start(); }, 2500);
-      intro.addEventListener("click", finish);
+      ["click", "keydown", "wheel", "touchstart"].forEach((ev) => window.addEventListener(ev, finish, { once: true, passive: true }));
     }
   }
 
