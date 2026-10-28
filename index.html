@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="site.css?v=37"/>
+<link rel="stylesheet" href="site.css?v=38"/>
 </head>
 <body>
 <div class="opening" id="opening" aria-hidden="true">
@@ -60,9 +60,10 @@
     <div class="center intro">
       <h2 class="h2">You&rsquo;ve tried the pills, the masks, the white noise.<br>You&rsquo;ve watched the score drop.<br><span class="muted">You&rsquo;re still tired.</span></h2>
     </div>
+    <p class="pb-hint" id="pbHint">Tap the one that sounds like you.</p>
     <p class="pb-you" id="pbYou" aria-live="polite" hidden></p>
     <div class="pb-grid">
-      <article class="pb">
+      <article class="pb" data-p="mind" tabindex="0" role="button" aria-pressed="false">
         <svg class="pb-line" viewBox="0 0 300 80" aria-hidden="true">
           <path class="bad" d="M0 40 L12 18 L24 60 L36 22 L48 58 L60 16 L72 62 L84 24 L96 56 L108 18 L120 60 L132 26 L144 54 L156 20 L168 58 L180 24 L192 56 L204 22 L216 60 L228 26 L240 54 L252 20 L264 58 L276 28 L288 52 L300 40"/>
           <path class="good" d="M0 40 L12 18 L24 60 L36 22 L48 58 L60 30 C80 30 85 64 110 64 S145 16 170 16 S205 64 230 64 S265 16 300 30"/>
@@ -71,7 +72,7 @@
         <p class="pb-was">Replaying the day at midnight.</p>
         <p class="pb-fix">Drift off sooner.</p>
       </article>
-      <article class="pb">
+      <article class="pb" data-p="wake" tabindex="0" role="button" aria-pressed="false">
         <svg class="pb-line" viewBox="0 0 300 80" aria-hidden="true">
           <path class="bad" d="M0 40 C20 40 25 64 50 64 S80 40 92 40 L98 6 L104 40 C120 40 125 64 150 64 S180 40 192 40 L198 6 L204 40 C220 40 225 64 250 64 S280 40 300 40"/>
           <path class="good" d="M0 40 C20 40 25 64 50 64 S80 16 100 16 S125 64 150 64 S180 16 200 16 S225 64 250 64 S280 40 300 40"/>
@@ -80,7 +81,7 @@
         <p class="pb-was">Awake at 3 AM, staring at the ceiling.</p>
         <p class="pb-fix">Settle back sooner.</p>
       </article>
-      <article class="pb">
+      <article class="pb" data-p="tired" tabindex="0" role="button" aria-pressed="false">
         <svg class="pb-line" viewBox="0 0 300 80" aria-hidden="true">
           <path class="bad" d="M0 40 C25 40 25 32 50 32 S75 48 100 48 S125 32 150 32 S175 48 200 48 S225 32 250 32 S275 40 300 40"/>
           <path class="good" d="M0 40 C25 40 25 8 50 8 S75 72 100 72 S125 8 150 8 S175 72 200 72 S225 8 250 8 S275 40 300 40"/>
@@ -349,7 +350,7 @@
   </div>
 </footer>
 
-<script src="site.js?v=37"></script>
+<script src="site.js?v=38"></script>
 <div class="wl" id="wl" role="dialog" aria-modal="true" aria-labelledby="wlTitle" hidden>
   <div class="wl-back" data-wl-close></div>
   <form class="wl-card" id="wlForm" novalidate>
@@ -442,7 +443,7 @@
   </div>
 </div>
 
-<script src="waitlist.js?v=37"></script>
-<script src="personal.js?v=37"></script>
+<script src="waitlist.js?v=38"></script>
+<script src="personal.js?v=38"></script>
 </body>
 </html>

@@ -40,7 +40,8 @@
     current = key;
     document.documentElement.dataset.pick = key;
     chipSets.forEach((set) => set.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.p === key))));
-    cards.forEach((card, i) => card.classList.toggle("is-you", i === c.card));
+    cards.forEach((card, i) => { card.classList.toggle("is-you", i === c.card); card.setAttribute("aria-pressed", String(i === c.card)); });
+    const hint = document.getElementById("pbHint"); if (hint) hint.hidden = true;
     if (you) {
       you.innerHTML = "";
       const pb = document.createElement("span"); pb.className = "pb-you-p"; pb.textContent = c.you[0];
@@ -77,6 +78,12 @@
     });
   }));
 
+  // The problem cards are pickers too.
+  cards.forEach((card) => {
+    const go = () => { apply(card.dataset.p, { fromUser: true }); };
+    card.addEventListener("click", go);
+    card.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+  });
   // After a pick in the pop-up: we hear you, here's what it does for you, join right here.
   let pickedKey = null;
   const showSeen = (key) => {
