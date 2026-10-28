@@ -52,9 +52,9 @@
   if (read) { read.setAttribute("aria-label", read.dataset.read); words.forEach((s) => { read.append(s, " "); }); }
 
   // Story steps.
-  const storyMedia = [...story.querySelectorAll(".story-media > figure")];
-  const storyCopy = [...story.querySelectorAll(".story-copy > div")];
-  const storyDots = [...story.querySelectorAll(".story-progress i")];
+  const storyMedia = story ? [...story.querySelectorAll(".story-media > figure")] : [];
+  const storyCopy = story ? [...story.querySelectorAll(".story-copy > div")] : [];
+  const storyDots = story ? [...story.querySelectorAll(".story-progress i")] : [];
   let storyStep = -1;
   const setStory = (i) => {
     if (i === storyStep) return;
@@ -78,10 +78,12 @@
     if (!reduced) {
       // Hero: wordmark + product drift back and fade as you leave.
       const p = clamp(y / (h * .9));
+      if (heroStage && heroCopy) {
       heroStage.style.transform = `translateY(${p * 120}px) scale(${1 - p * .12})`;
       heroStage.style.opacity = String(1 - p * .9);
       heroCopy.style.transform = `translateY(${p * 60}px)`;
       heroCopy.style.opacity = String(1 - p * 1.3);
+      }
 
       // Worn close-up grows to full size, then tags appear.
       if (wornFrame) {
@@ -104,9 +106,11 @@
     }
 
     // Story: three steps across the pinned scroll.
-    const sr = story.getBoundingClientRect();
-    const sp = clamp(-sr.top / (story.offsetHeight - h));
-    setStory(sp < .5 ? 0 : 1);
+    if (story) {
+      const sr = story.getBoundingClientRect();
+      const sp = clamp(-sr.top / Math.max(1, story.offsetHeight - h));
+      setStory(sp < .5 ? 0 : 1);
+    }
   };
   const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(frame); } };
   window.addEventListener("scroll", onScroll, { passive: true });
@@ -211,96 +215,13 @@
   }), { rootMargin: "0px 0px -12% 0px", threshold: .15 });
   document.querySelectorAll(".s3-stage, .s3x").forEach((el) => io.observe(el));
   if (!reduced) {
-    document.querySelectorAll(".intro, .why-copy, .why-media, .demo-rail, .part, .faq, .closing-copy, .closing-cta, .h2.center").forEach((el, i) => {
+    document.querySelectorAll(".intro, .why-copy, .why-media, .demo-rail, .part, .pb, .cmp-scroll, .faq, .closing-copy, .closing-cta, .h2.center").forEach((el, i) => {
       el.classList.add("reveal"); el.style.transitionDelay = `${(i % 3) * 90}ms`; io.observe(el);
     });
     document.querySelectorAll(".demo-stage").forEach((el) => { el.classList.add("reveal-clip"); io.observe(el); });
   }
 
-  // ---------- Scores: centred carousel ----------
-  const s3 = [...document.querySelectorAll(".s3-card")];
-  if (s3.length) {
-    const dots = [...document.querySelectorAll(".s3-dots i")];
-    let cur = 0, s3Timer = 0;
-    const place = () => s3.forEach((c, i) => {
-      let d = i - cur; if (d > 1) d -= s3.length; if (d < -1) d += s3.length;
-      c.dataset.pos = d === 0 ? "center" : d < 0 ? "left" : "right";
-      dots.forEach((dot, k) => dot.classList.toggle("is-on", k === cur));
-    });
-    const go = (n) => { cur = (n + s3.length) % s3.length; place(); };
-    document.querySelectorAll(".s3-nav .round").forEach((b) => b.addEventListener("click", () => { clearInterval(s3Timer); go(cur + Number(b.dataset.dir)); }));
-    s3.forEach((c, i) => c.addEventListener("click", () => { clearInterval(s3Timer); go(i); }));
-    place();
-    if (!reduced) {
-      new IntersectionObserver(([e]) => { clearInterval(s3Timer); if (e.isIntersecting) s3Timer = setInterval(() => go(cur + 1), 4500); }, { threshold: .4 })
-        .observe(document.querySelector(".s3-stage"));
-    }
-  }
-
-  // ---------- Learns you: night 1 → 30 ----------
-  const range = document.getElementById("nightRange");
-  if (range) {
-    const lerp3 = (n, a, b, c) => n <= 7 ? a + (b - a) * (n - 1) / 6 : b + (c - b) * (n - 7) / 23;
-    const marks = document.getElementById("lpMarks");
-    const peaks = [50, 150, 250, 350, 450, 550];
-    const jitterSign = [1, -1, 1, 1, -1, 1];
-    const NS = "http://www.w3.org/2000/svg";
-    const dots = peaks.map(() => { const g = document.createElementNS(NS, "g"); g.innerHTML = '<line y1="0" y2="160"/><circle r="6"/>'; marks.append(g); return g; });
-    const picks = [...document.querySelectorAll(".night-picker button")];
-    const el = (id) => document.getElementById(id);
-    const render = (n) => {
-      const score = Math.round(lerp3(n, 72, 84, 91));
-      const vol = Math.round(lerp3(n, 60, 44, 36));
-      const stims = Math.round(lerp3(n, 180, 214, 241));
-      const offset = Math.round(lerp3(n, 0, 12, 18));
-      const jitter = lerp3(n, 22, 9, 0);
-      const mins = 41 + offset, hh = mins >= 60 ? 11 : 10, mm = String(mins % 60).padStart(2, "0");
-      el("lpNight").textContent = `Night ${n}`;
-      el("lpTag").textContent = n < 4 ? "Getting to know you" : n < 15 ? "Softer, a little later" : "Tuned to you";
-      el("lpStart").textContent = `${hh}:${mm} PM`;
-      el("lpVolTxt").textContent = `${vol}%`;
-      el("lpVol").style.width = `${vol}%`;
-      el("lpStims").textContent = String(stims);
-      el("lpScore").textContent = String(score);
-      el("lpArc").style.strokeDashoffset = String(213.6 - 213.6 * score / 100);
-      // Stimulation markers drift onto the rising edge of each wave as Droyma learns you.
-      dots.forEach((g, i) => {
-        const x = peaks[i] - 14 + jitter * jitterSign[i];
-        g.setAttribute("transform", `translate(${x} 0)`);
-        const c = g.querySelector("circle"); c.setAttribute("cy", String(80 - 60 * Math.cos(2 * Math.PI * (x - 50) / 100)));
-        c.setAttribute("r", String(3 + vol / 12));
-      });
-      picks.forEach((b) => b.classList.toggle("is-on", Number(b.dataset.n) === n));
-      // The next morning's scores improve as Droyma tunes in.
-      const loadAm = Math.round(lerp3(n, 40, 31, 24)), charge = Math.round(lerp3(n, 64, 78, 86));
-      el("msLoad").textContent = String(loadAm);
-      const endY = 8 + (78 - loadAm) / 78 * 52 * 1.05;
-      const d = `M0 8 C60 8 90 ${8 + (endY - 8) * .35} 130 ${8 + (endY - 8) * .8} S190 ${endY} 200 ${endY}`;
-      el("mrFallLine").setAttribute("d", d);
-      el("mrFallArea").setAttribute("d", `${d} L200 60 L0 60 Z`);
-      el("mrFallEnd").setAttribute("cx", "200"); el("mrFallEnd").setAttribute("cy", String(endY));
-      el("msSleep").textContent = String(score);
-      el("mrSleepArc").style.strokeDashoffset = String(207.3 - 207.3 * score / 100);
-      el("msCharge").textContent = String(charge);
-      [...el("mrCells").children].forEach((c, ci) => c.classList.toggle("on", ci < Math.round(charge / 10)));
-      el("mrNight").textContent = `After night ${n}`;
-    };
-    let autoplay = 0;
-    const stopAuto = () => clearInterval(autoplay);
-    range.addEventListener("input", () => { stopAuto(); render(Number(range.value)); });
-    picks.forEach((b) => b.addEventListener("click", () => { stopAuto(); range.value = b.dataset.n; render(Number(b.dataset.n)); }));
-    render(1);
-    if (!reduced) {
-      let played = false;
-      new IntersectionObserver(([e]) => {
-        if (!e.isIntersecting || played) return;
-        played = true; let n = 1;
-        autoplay = setInterval(() => { n++; range.value = n; render(n); if (n >= 30) stopAuto(); }, 90);
-      }, { threshold: .5 }).observe(document.querySelector(".learn-panel"));
-    }
-  }
-
-  // ---------- Why Droyma: rotating reasons ----------
+  // ---------- What changes: rotating outcomes ----------
   const whyItems = [...document.querySelectorAll(".why-list li")];
   if (whyItems.length) {
     const whyDetail = [...document.querySelectorAll(".why-detail > div")];
@@ -403,34 +324,4 @@
     else new IntersectionObserver(([e]) => { running = e.isIntersecting; last = 0; if (running) { fromScroll(); requestAnimationFrame(loop); } }, { threshold: 0 }).observe(night);
   }
 
-  // ---------- It gets better every night: scroll plays the first month ----------
-  const l2 = document.getElementById("l2Bars");
-  if (l2) {
-    const lerpN = (n, a, b, c) => n <= 7 ? a + (b - a) * (n - 1) / 6 : b + (c - b) * (n - 7) / 23;
-    const vals = [], bars = [];
-    for (let n = 1; n <= 30; n++) {
-      const wobble = [0, -2, 1, -1, 2, 0, -1, 1, -2, 1][n % 10];
-      vals.push(n === 1 ? 72 : n === 30 ? 91 : Math.round(lerpN(n, 72, 84, 91) + wobble));
-      const b = document.createElement("i"); b.style.setProperty("--h", `${(vals[n - 1] - 55) / 40 * 100}%`); l2.append(b); bars.push(b);
-    }
-    const chart = document.getElementById("l2Chart"), tip = document.getElementById("l2Tip");
-    const g = (id) => document.getElementById(id);
-    let lastN = 0;
-    const playMonth = () => {
-      const r = chart.getBoundingClientRect(), H = vh();
-      const pr = reduced ? 1 : clamp((H * .82 - r.top) / (H * .62));
-      const n = Math.max(1, Math.ceil(pr * 30));
-      if (n === lastN) return; lastN = n;
-      bars.forEach((b, i) => { b.classList.toggle("on", i < n); b.classList.toggle("cur", i === n - 1); });
-      tip.style.left = `${(n - .5) / 30 * 100}%`;
-      tip.style.bottom = `${(vals[n - 1] - 55) / 40 * 100}%`;
-      g("l2TipN").textContent = `Night ${n}`; g("l2TipV").textContent = String(vals[n - 1]);
-      g("l2S").textContent = String(vals[n - 1]);
-      g("l2L").textContent = String(Math.round(lerpN(n, 40, 31, 24)));
-      g("l2C").textContent = String(Math.round(lerpN(n, 64, 78, 86)));
-    };
-    window.addEventListener("scroll", playMonth, { passive: true });
-    window.addEventListener("resize", () => { lastN = 0; playMonth(); });
-    playMonth();
-  }
 })();

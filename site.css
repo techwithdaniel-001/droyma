@@ -1357,3 +1357,82 @@ button { font: inherit; color: inherit; }
 .s3x.in .sx-time i { transform: scaleX(1); }
 .s3x-3 .sx-bars { grid-template-columns: repeat(2, minmax(0, 100px)); gap: 20px; }
 .s3x-3 .sx-wave { height: 96px; }
+
+/* ---------- No scores: the problem, then the fix ---------- */
+.prob .h2, .cmp-v1 .h2 { font-size: clamp(30px, 4.4vw, 52px); letter-spacing: -.035em; line-height: 1.08; }
+.prob .muted { color: var(--ink-3); }
+.prob .intro { margin-bottom: 56px; }
+.pb-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; max-width: 1160px; }
+.pb { min-width: 0; display: flex; flex-direction: column; padding: 30px 28px 32px; border-radius: var(--radius); background: var(--paper-2); }
+.pb-line { width: 100%; height: auto; margin-bottom: 30px; overflow: visible; }
+.pb-line path { fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.pb-line .bad { stroke: var(--ink-3); opacity: .9; transition: opacity 1s var(--ease) .9s; }
+.pb-line .good { stroke: var(--navy); stroke-dasharray: 800; stroke-dashoffset: 800; transition: stroke-dashoffset 2s var(--ease) .7s; }
+.pb.in .bad { opacity: .22; }
+.pb.in .good { stroke-dashoffset: 0; }
+.pb h3 { font-size: 24px; font-weight: 500; letter-spacing: -.02em; line-height: 1.2; margin: 0 0 10px; }
+.pb-was { color: var(--ink-2); font-size: 16px; margin: 0 0 22px; }
+.pb-fix { margin: auto 0 0; padding-top: 18px; border-top: 1px solid var(--line); font-size: 16px; color: var(--ink); }
+.pb-fix b { color: var(--navy); font-weight: 600; }
+@media (prefers-reduced-motion: reduce) { .pb-line .good { stroke-dashoffset: 0; } .pb-line .bad { opacity: .22; } }
+@media (max-width: 860px) {
+  .pb-grid { grid-template-columns: 1fr; gap: 14px; }
+  .pb { padding: 24px 22px 26px; }
+  .pb-line { margin-bottom: 20px; }
+  .prob .intro { margin-bottom: 36px; }
+}
+
+/* Learns card: pulses drift into place on the wave */
+.learn-eeg { position: absolute; left: 8%; right: 8%; top: 30%; width: 84%; }
+.le-pulses circle { fill: var(--navy); stroke: var(--sky); stroke-width: 2.5; animation: le-settle 4s var(--ease) infinite; }
+.le-pulses circle:nth-child(1) { --dx: 26px; }
+.le-pulses circle:nth-child(2) { --dx: -22px; animation-delay: .25s; }
+.le-pulses circle:nth-child(3) { --dx: 30px; animation-delay: .5s; }
+@keyframes le-settle { 0% { transform: translate(var(--dx), 34px); opacity: .35; } 55%, 100% { transform: none; opacity: 1; } }
+.le-cap { position: absolute; left: 0; right: 0; top: 64%; text-align: center; font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: rgba(255, 255, 255, .6); }
+.cmp-v1 .sub { margin-top: 6px; }
+.cmp-v1 .intro { margin-bottom: 44px; }
+.story[data-step="1"] .orb-fill { height: 100%; }
+.cmp-v1 .c-us { background: #eef2f8; }
+.cmp-v1 .c-us .yes { background: var(--navy); }
+.cmp-v1 .c-head .c-us b, .cmp-v1 .c-row > .c-us { color: var(--navy) !important; }
+/* Waitlist conversion */
+.hero-for { margin: 14px auto 0; max-width: 520px; font-size: clamp(16px, 1.4vw, 19px); line-height: 1.45; color: rgba(13, 27, 46, .72); text-wrap: balance; }
+.hero-micro { display: block; margin-top: 12px; font-size: 13px; color: rgba(13, 27, 46, .58); }
+.pb-cta { display: flex; flex-direction: column; align-items: center; gap: 18px; margin-top: 56px; text-align: center; }
+.pb-cta p { margin: 0; font-size: clamp(20px, 2vw, 26px); font-weight: 500; letter-spacing: -.02em; }
+.cmp-cta { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.cmp-cta small { font-size: 13px; color: var(--ink-3); }
+.cmp-v1 .c-row { align-items: stretch; }
+.cmp-v1 .c-row > div { display: flex; align-items: center; justify-content: center; text-align: center; }
+.cmp-v1 .c-row > div:first-child { justify-content: flex-start; text-align: left; }
+@media (max-width: 860px) { .pb-cta { margin-top: 36px; } }
+
+/* ===== Conversion pass: clear how-it-works, outcomes, honest CTAs ===== */
+.hw-intro { margin: 0 auto; }
+.hw-intro .h2 { font-size: clamp(30px, 4.4vw, 52px); letter-spacing: -.035em; line-height: 1.08; }
+.hw-intro .muted { color: var(--ink-3); }
+.hw-intro .sub { margin-top: 6px; }
+.part-copy p { max-width: 560px; }
+.pb-cta small, .sci-cta small { font-size: 13px; color: var(--ink-3); margin-top: -6px; }
+.why-note { display: block; margin-top: 14px; font-size: 13px; color: var(--ink-3); }
+.why-v1 .why-list button { font-size: clamp(24px, 2.6vw, 30px); }
+.fig-run img { filter: grayscale(1) contrast(1.05); object-position: 50% 60%; }
+.sci-cta { display: flex; flex-direction: column; align-items: center; gap: 12px; margin: 56px auto 0; text-align: center; }
+.closing-perks { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.closing-perks li { font-size: 13px; font-weight: 500; color: var(--navy); padding: 7px 14px; border-radius: 999px; background: rgba(255, 255, 255, .55); border: 1px solid rgba(13, 27, 46, .1); }
+.closing-cta .closing-free { font-size: 13px; color: rgba(13, 27, 46, .55); }
+@media (max-width: 600px) {
+  .closing-perks li { font-size: 12px; padding: 6px 11px; }
+  .sci-cta { margin-top: 40px; }
+}
+.closing { padding-top: 110px; }
+.closing-product { width: clamp(130px, 14vw, 190px); margin: 34px 0 30px; }
+/* What changes + Compare are both white: close the double gap between them */
+.why-v1.section { padding-bottom: 32px; }
+/* Steps readable without clicking */
+@media (min-width: 900px) {
+  .part:not(.is-open) .part-copy p { opacity: 1; font-size: 15px; line-height: 1.45; }
+  .parts { height: 560px; }
+}
+.part-toggle { display: none; }
