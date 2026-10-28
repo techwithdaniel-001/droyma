@@ -87,8 +87,9 @@
     const btn = form.querySelector('[type="submit"]'); btn.disabled = true; btn.textContent = "Joining…";
     try {
       if (ENDPOINT) {
-        const r = await fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({ ...data, _subject: "New Droyma waitlist sign-up" }) });
-        if (!r.ok) throw new Error(String(r.status));
+        const r = await fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({ ...data, _subject: "New Droyma waitlist sign-up", _template: "table", _captcha: "false" }) });
+        const out = await r.json().catch(() => ({}));
+        if (!r.ok || String(out.success) === "false") throw new Error(out.message || String(r.status));
       } else {
         window.open(`${TALLY}?${new URLSearchParams(data)}`, "_blank", "noopener");
       }

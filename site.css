@@ -474,7 +474,6 @@ button { font: inherit; color: inherit; }
 .why-detail > div.is-active { opacity: 1; transform: none; }
 .why-detail h3 { font-size: 19px; font-weight: 600; margin: 0 0 6px; letter-spacing: -.01em; }
 .why-detail p { margin: 0; color: #5b5d63; max-width: 400px; font-size: 16px; }
-.why-v1 .btn-wide { width: 100%; max-width: 300px; }
 .why-v1 .btn-dark { background: var(--ink); color: #fff; }
 .why-media { position: relative; aspect-ratio: 1 / 1; border-radius: 22px; overflow: hidden; background: var(--paper-2); }
 .why-media figure { position: absolute; inset: 0; margin: 0; opacity: 0; transition: opacity .6s; display: grid; place-items: center; }
@@ -1332,7 +1331,6 @@ button { font: inherit; color: inherit; }
 .s3x.in .sx-bars i { transform: scaleY(1); }
 .sx-bars span { font-size: 13px; color: var(--ink-3); }
 .sx-bars .on span { color: var(--ink); font-weight: 500; }
-.sci-also { max-width: 1200px; margin: 22px auto 0; font-size: 18px; color: var(--ink-2); }
 @media (max-width: 600px) { .s3x-2 .sx { min-height: 0; } .sx-wave { height: 80px; } .sx-bars { height: 100px; } }
 .sx-bars { align-items: stretch; grid-template-columns: repeat(2, minmax(0, 120px)); gap: 28px; height: 150px; }
 .sx-bars div { align-items: flex-start; }
@@ -1419,11 +1417,8 @@ button { font: inherit; color: inherit; }
 .why-v1 .why-list button { font-size: clamp(24px, 2.6vw, 30px); }
 .fig-run img { filter: grayscale(1) contrast(1.05); object-position: 50% 60%; }
 .sci-cta { display: flex; flex-direction: column; align-items: center; gap: 12px; margin: 56px auto 0; text-align: center; }
-.closing-perks { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
-.closing-perks li { font-size: 13px; font-weight: 500; color: var(--navy); padding: 7px 14px; border-radius: 999px; background: rgba(255, 255, 255, .55); border: 1px solid rgba(13, 27, 46, .1); }
 .closing-cta .closing-free { font-size: 13px; color: rgba(13, 27, 46, .55); }
 @media (max-width: 600px) {
-  .closing-perks li { font-size: 12px; padding: 6px 11px; }
   .sci-cta { margin-top: 40px; }
 }
 .closing { padding-top: 110px; }
@@ -1489,3 +1484,121 @@ html.wl-open { overflow: hidden; }
   .wl-card { border-radius: 26px 26px 0 0; padding: 30px 20px calc(26px + env(safe-area-inset-bottom, 0px)); max-height: 92dvh; }
 }
 @media (prefers-reduced-motion: reduce) { .wl-card, .wl-back, .wl-step.is-on { transition: none; animation: none; } }
+
+/* =====================================================================
+   v12 · HIERARCHY + CALM PASS (final overrides — keep last)
+   One focal point per section. Ladder: mono eyebrow → headline →
+   one short sub → content → one CTA. Spacing scale: 8 / 16 / 24 / 40 / 64 / 120.
+   ===================================================================== */
+
+/* Shared ladder */
+.intro { margin-bottom: 64px; }
+.intro .mono, .sci2-head .mono, .fn .mono, .why-copy .mono { margin-bottom: 24px; font-size: 12px; letter-spacing: .12em; color: var(--ink-3); }
+.prob .h2, .cmp-v1 .h2, .hw-intro .h2 { font-size: clamp(32px, 4.4vw, 54px); line-height: 1.06; margin-bottom: 24px; }
+.intro .sub, .hw-intro .sub, .cmp-v1 .sub { margin-top: 0; max-width: 520px; font-size: clamp(17px, 1.4vw, 19px); color: var(--ink-2); text-wrap: balance; }
+
+/* Quiet CTA: a text link for every CTA between the problem and the closing */
+.link-cta { display: inline-flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 600; color: var(--ink); text-decoration: none; cursor: pointer; padding: 10px 0; border-bottom: 1px solid currentColor; line-height: 1.2; }
+.link-cta span { transition: transform .25s var(--ease); }
+.link-cta:hover span { transform: translateX(4px); }
+.link-cta:hover { color: var(--navy); }
+
+/* Hero: one quiet line under the button */
+.hero-micro { margin-top: 16px; font-size: 13px; }
+
+/* Problem: headline leads, cards breathe, one CTA */
+.prob .intro { margin-bottom: 64px; }
+.pb { padding: 32px 30px 32px; }
+.pb h3 { font-size: 22px; margin-bottom: 8px; }
+.pb-was { font-size: 16px; line-height: 1.5; margin-bottom: 24px; }
+.pb-fix { font-size: 16px; padding-top: 16px; }
+.pb-cta { margin-top: 64px; gap: 16px; }
+.pb-cta p { font-size: clamp(19px, 1.8vw, 23px); color: var(--ink-2); font-weight: 400; }
+.pb-cta small { margin-top: 0; }
+
+/* How it works */
+.hw-intro { margin-bottom: 64px; }
+
+/* What changes: list is the focal point, CTA is a quiet link */
+.why-v1 .why-timer { margin: 16px 0 24px; }
+.why-v1 .link-cta { margin-top: 0; }
+.why-note { margin-top: 24px; font-size: 12px; max-width: 360px; line-height: 1.5; }
+
+/* Compare: scannable table, Droyma column is the hero */
+.cmp-v1 .intro { margin-bottom: 56px; }
+.cmp-v1 .compare { font-size: 15px; border-radius: 24px; overflow: clip; }
+.cmp-v1 .c-row > div { padding: 20px 16px; line-height: 1.35; }
+.cmp-v1 .c-head > div { padding-top: 26px; padding-bottom: 22px; }
+.cmp-v1 .c-head b { font-size: 15px; }
+.cmp-v1 .c-row > div:first-child { color: var(--ink-2); font-weight: 500; background: var(--paper); }
+.cmp-v1 .c-row > .c-us { font-weight: 600; background: #eef2f8; }
+.cmp-v1 .c-head .c-us b { font-size: 17px; }
+.cmp-v1 .c-row > div:not(.c-us):not(:first-child) { color: var(--ink-3); }
+.cmp-v1 .fine { font-size: 12px; line-height: 1.6; max-width: 640px; margin: 24px auto 40px; }
+.cmp-cta { gap: 0; }
+@media (max-width: 860px) {
+  .cmp-scroll { margin-left: -16px; margin-right: -16px; padding: 0 16px; scroll-padding-left: 16px; -webkit-overflow-scrolling: touch; }
+  .cmp-v1 .compare { min-width: 660px; font-size: 14px; border-radius: 20px; }
+  .cmp-v1 .c-row { grid-template-columns: 116px 150px repeat(3, minmax(0, 1fr)); }
+  .cmp-v1 .c-row > div { padding: 16px 12px; }
+  .cmp-v1 .c-row > div:first-child { position: sticky; left: 0; z-index: 2; box-shadow: 1px 0 0 var(--line); font-size: 13px; }
+  .cmp-v1 .c-row > .c-us { position: sticky; left: 116px; z-index: 1; box-shadow: 1px 0 0 rgba(13, 27, 46, .08); }
+}
+
+/* Founder: a personal letter */
+.founder { padding-top: 120px; padding-bottom: 120px; }
+.fn { max-width: 680px; }
+.fn .mono { margin-bottom: 32px; }
+.fn blockquote p { font-size: clamp(18px, 1.6vw, 21px); line-height: 1.6; letter-spacing: -.01em; color: var(--ink-2); margin: 0 0 24px; }
+.fn blockquote .fn-lead { font-size: clamp(28px, 3.2vw, 40px); line-height: 1.18; letter-spacing: -.03em; font-weight: 500; color: var(--ink); margin-bottom: 32px; text-wrap: balance; }
+.fn blockquote .fn-last { color: var(--ink); font-weight: 500; }
+.fn-sig { margin-top: 40px; padding-top: 0; border-top: 0; gap: 4px; }
+.fn-sig b { font-size: 18px; letter-spacing: -.01em; }
+.fn-sig span { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+
+/* Science: one number per card dominates */
+.sci2-head { margin-bottom: 56px; }
+.sci2-head .sub { font-size: 17px; max-width: 420px; }
+.sx-tag { padding: 0; background: none; border-radius: 0; font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+.sx-sound .sx-tag { background: none; color: rgba(255, 255, 255, .6); }
+.s3x-3 .sx { gap: 20px; padding: 32px 28px 24px; }
+.s3x-3 .sx-did { font-size: 18px; line-height: 1.4; color: var(--ink-2); font-weight: 400; letter-spacing: -.01em; }
+.sx-sound .sx-did { color: rgba(255, 255, 255, .78); }
+.s3x-3 .sx-big { gap: 14px; }
+.s3x-3 .sx-big strong { font-size: clamp(88px, 8vw, 128px); }
+.s3x-3 .sx-big span { font-size: 15px; color: var(--ink-2); }
+.sx-sound .sx-big span { color: rgba(255, 255, 255, .72); }
+.sx footer { padding-top: 14px; font-size: 13px; }
+.sx footer small { font-size: 11px; }
+.sx footer a { font-size: 13px; color: var(--ink-2); }
+.sx-sound footer a { color: rgba(255, 255, 255, .85); }
+.sci3 .sci-fine { max-width: 760px; margin: 32px auto 0; font-size: 12px; line-height: 1.6; text-align: center; }
+.sci-cta { margin-top: 40px; gap: 0; }
+
+/* FAQ: calm list */
+.faq summary { font-size: clamp(18px, 1.5vw, 20px); padding: 26px 48px 26px 0; letter-spacing: -.01em; }
+.faq summary::after { font-size: 22px; color: var(--ink-3); }
+.faq details p { margin: -8px 0 28px; font-size: 17px; line-height: 1.6; max-width: 620px; }
+@media (min-width: 900px) { .faq .h2 { font-size: clamp(40px, 4vw, 52px); position: sticky; top: 110px; align-self: start; } }
+
+/* Closing: headline, product, one button, one line */
+.closing-cta { gap: 16px; }
+
+@media (max-width: 860px) {
+  .intro, .hw-intro, .prob .intro { margin-bottom: 40px; }
+  .pb-cta { margin-top: 40px; }
+  .pb { padding: 26px 22px 26px; }
+  .founder { padding-top: 96px; padding-bottom: 96px; }
+  .fn blockquote .fn-lead { margin-bottom: 24px; }
+  .faq summary { padding: 22px 40px 22px 0; }
+  .sci2-head { margin-bottom: 40px; }
+}
+/* v12 QA fixes */
+.intro .mono, .sci2-head .mono, .fn .mono, .why-copy .mono { color: var(--ink-2); }
+.sx footer { gap: 12px; flex-wrap: wrap; }
+.sx footer small { flex: 1 1 auto; min-width: 0; }
+.s3x-3 .sx footer { flex-direction: column; align-items: flex-start; gap: 6px; }
+@media (max-width: 860px) {
+  .cmp-v1 .c-row > div:first-child { left: -16px; }
+  .cmp-v1 .c-row > .c-us { left: 100px; }
+}
