@@ -2,29 +2,29 @@
 (() => {
   const P = {
     mind:   { benefit: "Designed to help a busy mind settle, so sleep comes sooner. No pill.", dq: "Won’t a sound keep me up?", da: "It’s very soft, timed to your brain, and goes quiet if you stir.", lead: "Done with lying awake?", seen: "Tired body, busy mind. It’s one of the hardest ways to spend a night, and you’re not doing anything wrong.", card: 0, why: 0, faq: "How does Droyma work, in plain words?",
-              you: "For a mind that won’t switch off: Droyma is designed to help you settle sooner, without a pill.",
+              you: ["Your mind won’t switch off.", "Droyma is designed to help it settle, so sleep comes sooner."],
               close: "Built for the nights your mind won’t switch off.",
-              wl: { problem: ["I can’t switch my head off"] } },
+              wl: { problem: ["My mind won’t switch off"] } },
     wake:   { benefit: "Designed to keep your deep sleep deep and steady, so less wakes you and you settle back sooner.", dq: "Will it wake my partner?", da: "No. It reaches you through bone and is silent to the room.", lead: "Done with 3 AM?", seen: "3 AM, wide awake, counting the hours until the alarm. It wears you down, and you’re not doing anything wrong.", card: 1, why: 1, faq: "I’m a light sleeper. Won’t a sound wake me?",
-              you: "For 3 AM wake-ups, whatever wakes you: Droyma is designed to keep your sleep deep and steady, so less wakes you and you settle back sooner.",
+              you: ["You wake at 3 AM.", "Droyma is designed to keep deep sleep steady, so you settle back sooner."],
               close: "Built for everyone who knows 3 AM too well.",
-              wl: { problem: ["I wake up in the night"] } },
+              wl: { problem: ["I wake up at 3 AM"] } },
     tired:  { benefit: "Designed to deepen the sleep that actually restores you, so your mornings feel different.", dq: "Is it proven?", da: "The method is backed by published sleep research. We’ll share Droyma’s own results with you first.", lead: "Done with waking up tired?", seen: "Doing everything right and still waking up tired is exhausting. You’re not imagining it.", card: 2, why: 3, faq: "Is it proven?",
-              you: "For eight hours that still leave you tired: Droyma is designed to deepen the sleep that actually restores you.",
+              you: ["Eight hours, still tired.", "Droyma is designed to deepen the sleep that restores you."],
               close: "Built for mornings you actually feel rested.",
               wl: { problem: ["Tired even after 8 hours"] } },
     groggy: { benefit: "Drug-free. Nothing to take, so nothing wears off in the morning.", dq: "Can I stop melatonin?", da: "Talk to your doctor first. Droyma gives you another option to discuss.", lead: "Done with foggy mornings?", seen: "Trading a bad night for a foggy morning isn’t a fix. You deserve better than that.", card: 2, why: 3, faq: "Can I stop taking melatonin or sleep supplements?",
-              you: "For mornings in a melatonin fog: Droyma is drug-free, so there’s nothing to wear off.",
+              you: ["Melatonin leaves you foggy.", "Droyma is drug-free, so nothing wears off."],
               close: "Built for mornings without the fog.",
-              wl: { problem: ["Groggy mornings"], tried: ["Melatonin or supplements"] } },
+              wl: { problem: ["Melatonin leaves me groggy"], tried: ["Melatonin or supplements"] } },
     ring:   { benefit: "Built to change the night, not just score it.", dq: "Is it another tracker?", da: "No. There’s no score to chase. You’ll notice it in how you feel.", lead: "Done with bad scores?", seen: "A low score every morning, and nothing you can do about it. That’s frustrating, and you’re not alone.", card: 2, why: 1, faq: "I already wear an Oura or WHOOP. Why Droyma?",
-              you: "For the low score every morning: your ring tells you the night went badly. Droyma is built to change the night.",
+              you: ["Your ring keeps saying you slept badly.", "Droyma is built to change the night, not score it."],
               close: "Built to change the night, not just score it.",
               wl: { problem: ["Tired even after 8 hours"] } },
     memory: { benefit: "Deep sleep is when your brain stores the day. Timed sound has boosted overnight memory in lab studies, including adults 60 to 84.", dq: "Is it safe?", da: "Very soft sound, drug-free, and safety-tested before it ships.", lead: "Want your sharpness back?", seen: "Losing the word, the name, the thread. It’s unsettling, and sleep has a lot to do with it.", card: 2, why: 2, faq: "Is it proven?",
-              you: "For a memory that feels less sharp: deep sleep is when your brain stores the day, and timed sound has boosted overnight memory in lab studies, including adults 60 to 84.",
+              you: ["Your memory feels less sharp.", "Deep sleep is when your brain saves the day. Droyma is designed to deepen it."],
               close: "Built for holding on to your days.",
-              wl: { problem: ["Tired even after 8 hours"] } },
+              wl: { problem: ["My memory isn’t what it was"] } },
   };
   const KEY = "droymaPick", POPKEY = "droymaPickPop";
   const store = { get: (k, s) => { try { return (s ? sessionStorage : localStorage).getItem(k); } catch (_) { return null; } },
@@ -41,7 +41,12 @@
     document.documentElement.dataset.pick = key;
     chipSets.forEach((set) => set.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.p === key))));
     cards.forEach((card, i) => card.classList.toggle("is-you", i === c.card));
-    if (you) { you.textContent = c.you; you.hidden = false; }
+    if (you) {
+      you.innerHTML = "";
+      const pb = document.createElement("span"); pb.className = "pb-you-p"; pb.textContent = c.you[0];
+      const fx = document.createElement("span"); fx.className = "pb-you-f"; fx.textContent = c.you[1];
+      you.append(pb, fx); you.hidden = false;
+    }
     if (closeYou) { closeYou.textContent = c.close; closeYou.hidden = false; }
     document.querySelectorAll("[data-lead]").forEach((el) => { el.textContent = c.lead; });
     // What changes: open on their outcome.

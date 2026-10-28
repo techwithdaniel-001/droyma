@@ -79,10 +79,11 @@
 
   // Speak back to their problem.
   const LINES = {
-    "I can’t switch my head off": "a mind that won’t switch off",
-    "I wake up in the night": "waking up in the night",
+    "My mind won’t switch off": "a mind that won’t switch off",
+    "I wake up at 3 AM": "3 AM wake-ups",
     "Tired even after 8 hours": "eight hours that still leave you tired",
-    "Groggy mornings": "groggy mornings",
+    "Melatonin leaves me groggy": "foggy mornings without the pill",
+    "My memory isn’t what it was": "a memory that feels less sharp",
     "I’m a light sleeper": "sleep that breaks at every sound",
     "Short or broken nights (kids, travel, work)": "short, broken nights",
   };

@@ -1730,3 +1730,7 @@ html.pick-open { overflow: hidden; }
 .pick-done { animation: wl-in .45s var(--ease); }
 .pick-done .pick-sub { margin-bottom: 24px; }
 @media (max-width: 600px) { .pick-join { flex-direction: column; } .pick-join .btn { width: 100%; } .pick-card.is-seen { justify-content: flex-start; } .pick-help-v { font-size: 17px; } }
+/* Tailored line: problem, then fix */
+.pb-you { display: flex; flex-direction: column; align-items: center; gap: 6px; font-weight: 400; }
+.pb-you-p { font-size: clamp(22px, 2.4vw, 30px); font-weight: 500; letter-spacing: -.025em; color: var(--ink); }
+.pb-you-f { font-size: clamp(17px, 1.6vw, 20px); color: var(--navy); font-weight: 500; }
