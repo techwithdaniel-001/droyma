@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="site.css?v=32"/>
+<link rel="stylesheet" href="site.css?v=34"/>
 </head>
 <body>
 <div class="opening" id="opening" aria-hidden="true">
@@ -353,7 +353,7 @@
   </div>
 </footer>
 
-<script src="site.js?v=32"></script>
+<script src="site.js?v=34"></script>
 <div class="wl" id="wl" role="dialog" aria-modal="true" aria-labelledby="wlTitle" hidden>
   <div class="wl-back" data-wl-close></div>
   <form class="wl-card" id="wlForm" novalidate>
@@ -422,12 +422,30 @@
     <div class="pick-seen" id="pickSeen" hidden>
       <p class="mono">WE HEAR YOU</p>
       <p class="pick-seen-line" id="pickSeenLine"></p>
-      <button type="button" class="btn btn-dark btn-lg pick-go">Show me how Droyma helps</button>
+      <div class="pick-help">
+        <p class="pick-help-k">What Droyma is designed to do for you</p>
+        <p class="pick-help-v" id="pickBenefit"></p>
+        <p class="pick-doubt"><b id="pickDoubtQ"></b> <span id="pickDoubtA"></span></p>
+      </div>
+      <form class="pick-join" id="pickJoin" novalidate>
+        <label class="sr-only" for="pickEmail">Email</label>
+        <input id="pickEmail" name="email" type="email" autocomplete="email" required placeholder="Your email">
+        <button type="submit" class="btn btn-dark btn-lg">Get early access</button>
+      </form>
+      <p class="pick-err" id="pickErr" role="alert" hidden></p>
+      <small class="pick-fine">Free. No payment, no spam. First units go to the waitlist. <a href="privacy.html" target="_blank">Privacy</a></small>
+      <button type="button" class="pick-skip pick-later">Keep looking around</button>
+    </div>
+    <div class="pick-done" id="pickDone" hidden>
+      <div class="wl-check" aria-hidden="true"></div>
+      <p class="pick-seen-line">You&rsquo;re on the list.</p>
+      <p class="pick-sub" id="pickDoneMsg">We&rsquo;ll email you prototype updates as we build, and you&rsquo;ll hear first when Droyma is ready.</p>
+      <button type="button" class="btn btn-dark btn-lg pick-later">See how it works</button>
     </div>
   </div>
 </div>
 
-<script src="waitlist.js?v=32"></script>
-<script src="personal.js?v=32"></script>
+<script src="waitlist.js?v=34"></script>
+<script src="personal.js?v=34"></script>
 </body>
 </html>

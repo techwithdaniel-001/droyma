@@ -5,6 +5,14 @@
   const ENDPOINT = "https://formsubmit.co/ajax/opataebubechukwu@gmail.com";
   const TALLY = "https://tally.so/r/q4xPo5";
 
+  // Shared sign-up, also used by the "Trouble sleeping?" pop-up.
+  window.droymaJoin = async (data) => {
+    if (!ENDPOINT) { window.open(`${TALLY}?${new URLSearchParams(data)}`, "_blank", "noopener"); return; }
+    const r = await fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({ ...data, page: location.href, _subject: "New Droyma waitlist sign-up", _template: "table", _captcha: "false" }) });
+    const out = await r.json().catch(() => ({}));
+    if (!r.ok || String(out.success) === "false") throw new Error(out.message || String(r.status));
+    try { localStorage.setItem("droymaJoined", "1"); } catch (_) {}
+  };
   const wl = document.getElementById("wl"), form = document.getElementById("wlForm");
   if (!wl || !ENDPOINT) return;
   const steps = [...wl.querySelectorAll(".wl-step")], prog = [...wl.querySelectorAll(".wl-prog i")];
