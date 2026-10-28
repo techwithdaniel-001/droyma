@@ -1632,3 +1632,4 @@ html.wl-open { overflow: hidden; }
 @media (max-width: 800px) { .ns-labels span:not(.is-on) { opacity: 0; } }
 .why-timer { display: none !important; }
 @media (max-width: 699px) { .d-br { display: none; } }
+.sx-tag, .sx footer small { font-size: 12px; }
