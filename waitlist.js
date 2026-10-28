@@ -53,6 +53,16 @@
       });
     });
   });
+  // Prefill from the on-page "What's keeping you up?" pick.
+  document.addEventListener("droyma:pick", (e) => {
+    const want = e.detail || {};
+    wl.querySelectorAll(".wl-chips").forEach((group) => {
+      const labels = want[group.dataset.name] || [];
+      group.querySelectorAll("button").forEach((b) => {
+        if (labels.includes(b.textContent.trim()) && b.getAttribute("aria-pressed") !== "true") b.click();
+      });
+    });
+  });
   wl.querySelectorAll(".wl-next").forEach((b) => b.addEventListener("click", () => {
     if (step === 2) echo();
     show(step + 1);
