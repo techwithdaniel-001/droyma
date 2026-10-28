@@ -1742,3 +1742,13 @@ html.pick-open { overflow: hidden; }
 .pb-hint { margin: -28px auto 28px; text-align: center; font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
 .pb-hint[hidden] { display: none; }
 .pb.is-you { order: 0; }
+/* Active problem card: brand navy */
+.pb.is-you { background: radial-gradient(120% 90% at 20% 0%, #23497a 0%, var(--navy) 60%, #08111f 100%); box-shadow: 0 24px 60px rgba(13, 27, 46, .28); color: #fff; }
+.pb.is-you:hover { box-shadow: 0 28px 64px rgba(13, 27, 46, .32); }
+.pb.is-you h3 { color: #fff; }
+.pb.is-you .pb-was { color: rgba(255, 255, 255, .72); }
+.pb.is-you .pb-fix { color: #fff; border-top-color: rgba(255, 255, 255, .16); }
+.pb.is-you .pb-fix::before { color: rgba(255, 255, 255, .5); }
+.pb.is-you .pb-line .bad { stroke: rgba(255, 255, 255, .35); }
+.pb.is-you .pb-line .good { stroke: #8fb8ff; }
+.pb.is-you::after { color: #8fb8ff; }
