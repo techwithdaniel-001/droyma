@@ -1653,3 +1653,8 @@ html.wl-open { overflow: hidden; }
 .faq-toggle:hover { border-color: var(--ink-3); }
 .sci-more-wrap { display: flex; justify-content: center; margin-top: 8px; }
 @media (min-width: 900px) { .s3x-3.s3x-two { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 960px; } }
+/* Problem cards: tighter, let the wave carry it */
+.pb h3 { font-size: 26px; margin-bottom: 8px; }
+.pb-was { font-size: 17px; margin-bottom: 26px; }
+.pb-fix { font-size: 17px; font-weight: 500; color: var(--navy); }
+.pb-fix::before { content: "With Droyma · "; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); font-weight: 400; vertical-align: 2px; }
