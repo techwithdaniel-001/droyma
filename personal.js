@@ -6,7 +6,7 @@
               close: "Built for the nights your mind won’t switch off.",
               wl: { problem: ["I can’t switch my head off"] } },
     wake:   { card: 1, why: 1, faq: "I’m a light sleeper. Won’t a sound wake me?",
-              you: "For 3 AM wake-ups: Droyma is designed to keep your sleep deep and steady, so you sleep through.",
+              you: "For 3 AM wake-ups, whatever wakes you: Droyma is designed to keep your sleep deep and steady, so less wakes you and you settle back sooner.",
               close: "Built for everyone who knows 3 AM too well.",
               wl: { problem: ["I wake up in the night"] } },
     tired:  { card: 2, why: 3, faq: "Is it proven?",
@@ -20,6 +20,10 @@
     ring:   { card: 2, why: 1, faq: "I already wear an Oura or WHOOP. Why Droyma?",
               you: "For the low score every morning: your ring tells you the night went badly. Droyma is built to change the night.",
               close: "Built to change the night, not just score it.",
+              wl: { problem: ["Tired even after 8 hours"] } },
+    memory: { card: 2, why: 2, faq: "Is it proven?",
+              you: "For a memory that feels less sharp: deep sleep is when your brain stores the day, and timed sound has boosted overnight memory in lab studies, including adults 60 to 84.",
+              close: "Built for holding on to your days.",
               wl: { problem: ["Tired even after 8 hours"] } },
   };
   const KEY = "droymaPick", POPKEY = "droymaPickPop";
