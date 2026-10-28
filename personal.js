@@ -1,27 +1,27 @@
 // Droyma: tailor the page to what's keeping the visitor up.
 (() => {
   const P = {
-    mind:   { card: 0, why: 0, faq: "How does Droyma work, in plain words?",
+    mind:   { seen: "Tired body, busy mind. It’s one of the hardest ways to spend a night, and you’re not doing anything wrong.", card: 0, why: 0, faq: "How does Droyma work, in plain words?",
               you: "For a mind that won’t switch off: Droyma is designed to help you settle sooner, without a pill.",
               close: "Built for the nights your mind won’t switch off.",
               wl: { problem: ["I can’t switch my head off"] } },
-    wake:   { card: 1, why: 1, faq: "I’m a light sleeper. Won’t a sound wake me?",
+    wake:   { seen: "3 AM, wide awake, counting the hours until the alarm. It wears you down, and you’re not doing anything wrong.", card: 1, why: 1, faq: "I’m a light sleeper. Won’t a sound wake me?",
               you: "For 3 AM wake-ups, whatever wakes you: Droyma is designed to keep your sleep deep and steady, so less wakes you and you settle back sooner.",
               close: "Built for everyone who knows 3 AM too well.",
               wl: { problem: ["I wake up in the night"] } },
-    tired:  { card: 2, why: 3, faq: "Is it proven?",
+    tired:  { seen: "Doing everything right and still waking up tired is exhausting. You’re not imagining it.", card: 2, why: 3, faq: "Is it proven?",
               you: "For eight hours that still leave you tired: Droyma is designed to deepen the sleep that actually restores you.",
               close: "Built for mornings you actually feel rested.",
               wl: { problem: ["Tired even after 8 hours"] } },
-    groggy: { card: 2, why: 3, faq: "Can I stop taking melatonin or sleep supplements?",
+    groggy: { seen: "Trading a bad night for a foggy morning isn’t a fix. You deserve better than that.", card: 2, why: 3, faq: "Can I stop taking melatonin or sleep supplements?",
               you: "For mornings in a melatonin fog: Droyma is drug-free, so there’s nothing to wear off.",
               close: "Built for mornings without the fog.",
               wl: { problem: ["Groggy mornings"], tried: ["Melatonin or supplements"] } },
-    ring:   { card: 2, why: 1, faq: "I already wear an Oura or WHOOP. Why Droyma?",
+    ring:   { seen: "A low score every morning, and nothing you can do about it. That’s frustrating, and you’re not alone.", card: 2, why: 1, faq: "I already wear an Oura or WHOOP. Why Droyma?",
               you: "For the low score every morning: your ring tells you the night went badly. Droyma is built to change the night.",
               close: "Built to change the night, not just score it.",
               wl: { problem: ["Tired even after 8 hours"] } },
-    memory: { card: 2, why: 2, faq: "Is it proven?",
+    memory: { seen: "Losing the word, the name, the thread. It’s unsettling, and sleep has a lot to do with it.", card: 2, why: 2, faq: "Is it proven?",
               you: "For a memory that feels less sharp: deep sleep is when your brain stores the day, and timed sound has boosted overnight memory in lab studies, including adults 60 to 84.",
               close: "Built for holding on to your days.",
               wl: { problem: ["Tired even after 8 hours"] } },
@@ -66,11 +66,22 @@
     b.setAttribute("aria-pressed", "false");
     b.addEventListener("click", () => {
       const inPop = !!b.closest(".pick-pop");
-      apply(b.dataset.p, { fromUser: true, scroll: inPop });
-      if (inPop) hidePop();
+      apply(b.dataset.p, { fromUser: true });
+      if (inPop) showSeen(b.dataset.p);
     });
   }));
 
+  // After a pick in the pop-up: a short "we hear you" moment, then their page.
+  const showSeen = (key) => {
+    const card = pop.querySelector(".pick-card"), seen = document.getElementById("pickSeen");
+    document.getElementById("pickSeenLine").textContent = P[key].seen;
+    card.classList.add("is-seen"); seen.hidden = false;
+    setTimeout(() => seen.querySelector(".pick-go").focus({ preventScroll: true }), 50);
+  };
+  if (pop) pop.querySelector(".pick-go").addEventListener("click", () => {
+    hidePop();
+    setTimeout(() => document.getElementById("problem").scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+  });
   // Gentle pop-up, once per visit; dismissable.
   const hidePop = () => { if (!pop) return; pop.classList.remove("in"); document.documentElement.classList.remove("pick-open"); setTimeout(() => { pop.hidden = true; }, 300); store.set(POPKEY, "1", true); };
   if (pop) {

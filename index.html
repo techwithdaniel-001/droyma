@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="site.css?v=26"/>
+<link rel="stylesheet" href="site.css?v=28"/>
 </head>
 <body>
 <div class="opening" id="opening" aria-hidden="true">
@@ -61,8 +61,8 @@
       <h2 class="h2">You&rsquo;ve tried the pills, the masks, the white noise.<br>You&rsquo;ve watched the score drop.<br><span class="muted">You&rsquo;re still tired.</span></h2>
     </div>
     <div class="pick" id="pick">
-      <p class="pick-q">What&rsquo;s keeping you up?</p>
-      <div class="pick-chips" role="group" aria-label="What's keeping you up?"><button type="button" data-p="mind">My mind won&rsquo;t switch off</button><button type="button" data-p="wake">I wake up at 3 AM</button><button type="button" data-p="tired">Tired even after 8 hours</button><button type="button" data-p="groggy">Melatonin leaves me groggy</button><button type="button" data-p="ring">My ring says I sleep badly</button><button type="button" data-p="memory">My memory isn&rsquo;t what it was</button></div>
+      <p class="pick-q">Which one sounds like your nights?</p>
+      <div class="pick-chips" role="group" aria-label="Which one sounds like your nights?"><button type="button" data-p="mind">My mind won&rsquo;t switch off</button><button type="button" data-p="wake">I wake up at 3 AM</button><button type="button" data-p="tired">Tired even after 8 hours</button><button type="button" data-p="groggy">Melatonin leaves me groggy</button><button type="button" data-p="ring">My ring says I sleep badly</button><button type="button" data-p="memory">My memory isn&rsquo;t what it was</button></div>
     </div>
     <p class="pb-you" id="pbYou" aria-live="polite" hidden></p>
     <div class="pb-grid">
@@ -351,7 +351,7 @@
   </div>
 </footer>
 
-<script src="site.js?v=26"></script>
+<script src="site.js?v=28"></script>
 <div class="wl" id="wl" role="dialog" aria-modal="true" aria-labelledby="wlTitle" hidden>
   <div class="wl-back" data-wl-close></div>
   <form class="wl-card" id="wlForm" novalidate>
@@ -412,15 +412,20 @@
   <div class="pick-back"></div>
   <div class="pick-card">
     <button type="button" class="pick-x" aria-label="Close">&times;</button>
-    <p class="mono">MADE FOR YOUR NIGHTS</p>
-    <p class="pick-q" id="pickPopQ">What&rsquo;s keeping you up?</p>
-    <p class="pick-sub">Pick one. We&rsquo;ll show you what Droyma is designed to do for you.</p>
+    <p class="mono">YOU&rsquo;RE NOT THE ONLY ONE</p>
+    <p class="pick-q" id="pickPopQ">Trouble sleeping?</p>
+    <p class="pick-sub">Tell us what your nights are like, and we&rsquo;ll show you what Droyma is designed to change for you.</p>
     <div class="pick-chips"><button type="button" data-p="mind">My mind won&rsquo;t switch off</button><button type="button" data-p="wake">I wake up at 3 AM</button><button type="button" data-p="tired">Tired even after 8 hours</button><button type="button" data-p="groggy">Melatonin leaves me groggy</button><button type="button" data-p="ring">My ring says I sleep badly</button><button type="button" data-p="memory">My memory isn&rsquo;t what it was</button></div>
     <button type="button" class="pick-skip">Just looking</button>
+    <div class="pick-seen" id="pickSeen" hidden>
+      <p class="mono">WE HEAR YOU</p>
+      <p class="pick-seen-line" id="pickSeenLine"></p>
+      <button type="button" class="btn btn-dark btn-lg pick-go">Show me how Droyma helps</button>
+    </div>
   </div>
 </div>
 
-<script src="waitlist.js?v=26"></script>
-<script src="personal.js?v=26"></script>
+<script src="waitlist.js?v=28"></script>
+<script src="personal.js?v=28"></script>
 </body>
 </html>

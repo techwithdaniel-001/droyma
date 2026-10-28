@@ -1699,3 +1699,7 @@ html.pick-open { overflow: hidden; }
 }
 @media (prefers-reduced-motion: reduce) { .pick-card, .pick-back { transition: none; } }
 .pick-card:focus { outline: none; }
+/* "We hear you" moment */
+.pick-card.is-seen > :not(.pick-seen):not(.pick-x) { display: none; }
+.pick-seen { animation: wl-in .45s var(--ease); }
+.pick-seen-line { margin: 0 auto 32px; max-width: 560px; font-size: clamp(26px, 3.4vw, 38px); font-weight: 500; letter-spacing: -.03em; line-height: 1.2; color: var(--navy); text-wrap: balance; }
