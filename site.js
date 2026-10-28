@@ -209,7 +209,7 @@
     if (e.target.matches("[data-count]")) countUp(e.target);
     io.unobserve(e.target);
   }), { rootMargin: "0px 0px -12% 0px", threshold: .15 });
-  document.querySelectorAll(".s3-stage, .sci2-tiles").forEach((el) => io.observe(el));
+  document.querySelectorAll(".s3-stage, .s3x").forEach((el) => io.observe(el));
   if (!reduced) {
     document.querySelectorAll(".intro, .why-copy, .why-media, .demo-rail, .part, .faq, .closing-copy, .closing-cta, .h2.center").forEach((el, i) => {
       el.classList.add("reveal"); el.style.transitionDelay = `${(i % 3) * 90}ms`; io.observe(el);
