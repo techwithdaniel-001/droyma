@@ -102,7 +102,7 @@
     <div class="center intro hw-intro">
       <p class="mono">HOW IT WORKS</p>
       <h2 class="h2">It doesn&rsquo;t watch your sleep.<br><span class="muted">It works on it.</span></h2>
-      <p class="sub">A small wearable behind your ear. Three steps, all night, while you sleep.</p>
+      <p class="sub">A small wearable behind your ear. Three steps, all night, at home or away.</p>
     </div>
     <div class="parts">
       <article class="part is-open">
@@ -139,7 +139,7 @@
           <div class="nc is-on"><p class="nc-time">10:30 PM</p><h2>You drift off faster.</h2><p>Droyma senses you winding down and plays a soft, steady rhythm to help you settle.</p></div>
           <div class="nc"><p class="nc-time">12:40 AM</p><h2>Deep sleep begins.</h2><p>A soft sound lands on each slow wave. Your deep sleep runs deeper.</p></div>
           <div class="nc"><p class="nc-time">2:30 AM</p><h2>You start dreaming.</h2><p>Droyma goes quiet.</p></div>
-          <div class="nc"><p class="nc-time">4:30 AM</p><h2>Deep sleep returns.</h2><p>Droyma picks up where it left off.</p></div>
+          <div class="nc"><p class="nc-time">4:30 AM</p><h2>Deep sleep returns.</h2><p>Woken up? When you drift back to deep sleep, Droyma picks up where it left off.</p></div>
           <div class="nc"><p class="nc-time">6:45 AM</p><h2>Morning.</h2><p>You wake up restored.</p></div>
         </div>
       </div>
@@ -160,7 +160,7 @@
           <li class="is-active"><button>Fall asleep faster</button><p class="why-line">A soft, steady rhythm is designed to help a busy mind settle.</p></li>
           <li><button>Deeper sleep, fewer wake-ups</button><p class="why-line">Sound timed to each deep-sleep wave helps it run deeper and steadier.</p></li>
           <li><button>Sharper memory</button><p class="why-line">Deep sleep is when your brain stores what you learned. In a lab study of adults aged 60 to 84, sound timed to deep sleep tripled overnight word recall.</p></li>
-          <li><button>Wake up restored</button><p class="why-line">No pill, no groggy morning. Ready for the day. Now go chase your dreams.</p></li>
+          <li><button>Wake up restored</button><p class="why-line">Nothing to take, nothing to wear off, no groggy morning. Ready for the day. Now go chase your dreams.</p></li>
         </ol>
         <svg class="why-timer" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8"/><circle class="t" cx="10" cy="10" r="8"/></svg>
         <a class="btn btn-dark btn-wide" data-waitlist>Be first to try it</a>
@@ -180,7 +180,7 @@
     <div class="center intro">
       <p class="mono">COMPARE</p>
       <h2 class="h2">Pills knock you out. Trackers grade you.<br><span class="muted">Droyma changes the night itself.</span></h2>
-      <p class="sub">Another bottle on the nightstand. Another red score every morning. Neither changes the night. Keep your Oura or WHOOP; Droyma does the part they can&rsquo;t.</p>
+      <p class="sub">Another bottle on the nightstand. Another red score every morning. Neither changes the night. Keep your Oura or WHOOP. Droyma does the part they can&rsquo;t, and your ring or strap is an independent way to see if it&rsquo;s working for you.</p>
     </div>
     <div class="cmp-scroll">
       <div class="compare" role="table" aria-label="Droyma compared with Oura and WHOOP, Eight Sleep and melatonin">
@@ -201,6 +201,19 @@
     </div>
     <p class="fine center">Based on publicly available product information, October 2026. Oura, WHOOP and Eight Sleep are trademarks of their respective owners and are not affiliated with Droyma. Not medical advice; talk to a doctor before starting or stopping any sleep aid.</p>
     <div class="center cmp-cta"><a class="btn btn-dark btn-lg" data-waitlist>Get Droyma first</a><small>Free to join. No payment, no spam.</small></div>
+  </section>
+
+  <!-- 6b · FOUNDER NOTE — why Droyma exists -->
+  <section class="section white founder" id="founder">
+    <div class="fn">
+      <p class="mono">WHY I&rsquo;M BUILDING DROYMA</p>
+      <blockquote>
+        <p>For years I couldn&rsquo;t shut my head off at night. Even young, I wasn&rsquo;t getting real deep sleep. I woke up tired and groggy, and the more I learned, the more I saw how poor sleep is linked to so many other health problems later on.</p>
+        <p>My friends had it too. Waking up through the night. Turning down the temperature, wearing sleep masks, playing sounds all night just to drown out their heads. Lots of workarounds. Nothing that worked on the sleep itself.</p>
+        <p class="fn-last">So I&rsquo;m building the thing we all needed. And I&rsquo;ll show the waitlist every step: prototypes, tests and results.</p>
+      </blockquote>
+      <p class="fn-sig"><b>Daniel Opata</b><span>Founder, Droyma</span></p>
+    </div>
   </section>
 
   <!-- 7 · SCIENCE — three acoustic-stimulation studies -->
@@ -324,5 +337,62 @@
 </footer>
 
 <script src="site.js"></script>
+<div class="wl" id="wl" role="dialog" aria-modal="true" aria-labelledby="wlTitle" hidden>
+  <div class="wl-back" data-wl-close></div>
+  <form class="wl-card" id="wlForm" novalidate>
+    <button type="button" class="wl-x" data-wl-close aria-label="Close">&times;</button>
+    <div class="wl-prog" aria-hidden="true"><i></i><i></i><i></i></div>
+    <fieldset class="wl-step is-on" data-step="1">
+      <p class="mono">JOIN THE WAITLIST · 1 OF 3</p>
+      <h2 id="wlTitle">What&rsquo;s getting in the way of your sleep?</h2>
+      <p class="wl-sub">Pick all that fit. We&rsquo;re building Droyma around these.</p>
+      <div class="wl-chips" data-name="problem">
+        <button type="button">I can&rsquo;t switch my head off</button>
+        <button type="button">I wake up in the night</button>
+        <button type="button">Tired even after 8 hours</button>
+        <button type="button">Groggy mornings</button>
+        <button type="button">I&rsquo;m a light sleeper</button>
+        <button type="button">Short or broken nights (kids, travel, work)</button>
+      </div>
+      <button type="button" class="btn btn-dark btn-lg wl-next" disabled>Continue</button>
+    </fieldset>
+    <fieldset class="wl-step" data-step="2">
+      <p class="mono">2 OF 3</p>
+      <h2>What have you tried?</h2>
+      <p class="wl-sub">No wrong answers. Most people have tried a few.</p>
+      <div class="wl-chips" data-name="tried">
+        <button type="button">Oura</button>
+        <button type="button">WHOOP</button>
+        <button type="button">Apple Watch or other tracker</button>
+        <button type="button">Melatonin or supplements</button>
+        <button type="button">Cooling the room or bed</button>
+        <button type="button">Sleep mask or earplugs</button>
+        <button type="button">Sounds or white noise all night</button>
+        <button type="button">Nothing yet</button>
+      </div>
+      <div class="wl-row"><button type="button" class="wl-back-btn">Back</button><button type="button" class="btn btn-dark btn-lg wl-next" disabled>Continue</button></div>
+    </fieldset>
+    <fieldset class="wl-step" data-step="3">
+      <p class="mono">3 OF 3</p>
+      <h2>Where should we send your early access?</h2>
+      <p class="wl-sub" id="wlEcho">You&rsquo;re exactly who we&rsquo;re building for.</p>
+      <label class="wl-field"><span>First name</span><input name="name" autocomplete="given-name" placeholder="Optional"></label>
+      <label class="wl-field"><span>Email</span><input name="email" type="email" autocomplete="email" required placeholder="you@email.com"></label>
+      <p class="wl-err" id="wlErr" role="alert" hidden></p>
+      <div class="wl-row"><button type="button" class="wl-back-btn">Back</button><button type="submit" class="btn btn-dark btn-lg">Get early access</button></div>
+      <ul class="wl-perks"><li>First units</li><li>Prototype updates</li><li>Launch pricing first</li></ul>
+      <small class="wl-fine">Free. No payment, no spam. Unsubscribe any time.</small>
+    </fieldset>
+    <div class="wl-step wl-done" data-step="4">
+      <div class="wl-check" aria-hidden="true"></div>
+      <h2>You&rsquo;re on the list.</h2>
+      <p class="wl-sub" id="wlDoneMsg">First units go to the waitlist. We&rsquo;ll email you prototype updates as we build.</p>
+      <p class="wl-sub">Know someone who sleeps badly? Send them Droyma.</p>
+      <div class="wl-row center"><button type="button" class="btn btn-dark btn-lg" id="wlShare">Copy link to share</button></div>
+    </div>
+  </form>
+</div>
+
+<script src="waitlist.js"></script>
 </body>
 </html>
