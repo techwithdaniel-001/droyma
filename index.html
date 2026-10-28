@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="site.css?v=18"/>
+<link rel="stylesheet" href="site.css?v=19"/>
 </head>
 <body>
 <div class="opening" id="opening" aria-hidden="true">
@@ -226,7 +226,7 @@
       </div>
       <p class="sub">In sleep labs, soft sound timed to the brain has helped people fall asleep faster, sleep deeper and remember more. Droyma is designed to bring this approach out of the lab and into a wearable.</p>
     </div>
-    <div class="s3x s3x-3">
+    <div class="s3x s3x-3 s3x-two" id="sciGrid">
       <article class="sx">
         <span class="sx-tag">Falling asleep · medRxiv, 2024</span>
         <p class="sx-did">Soft sound, timed to the brain's pre-sleep rhythm.</p>
@@ -244,7 +244,7 @@
         <div class="sx-big"><strong><b data-count="71">71</b>%</strong><span>bigger overnight<br>memory gain</span></div>
         <footer><small>Ngo et al., Neuron 2013</small><a href="https://www.inb.uni-luebeck.de/fileadmin/files/PUBPDFS/NgMaBoMo13.pdf" target="_blank" rel="noreferrer">Read the study</a></footer>
       </article>
-      <article class="sx">
+      <article class="sx sx-extra" hidden>
         <span class="sx-tag">Adults 60–84 · Frontiers, 2017</span>
         <p class="sx-did">Pulses of soft pink noise, timed to each deep-sleep wave.</p>
         <div class="sx-bars" aria-label="Overnight memory gain: about three times larger after the sound night than after the night without sound.">
@@ -255,6 +255,7 @@
         <footer><small>Papalambros et al., Frontiers 2017</small><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5340797/" target="_blank" rel="noreferrer">Read the study</a></footer>
       </article>
     </div>
+    <div class="sci-more-wrap"><button type="button" class="faq-toggle sci-more" aria-expanded="false" aria-controls="sciGrid">View more research</button></div>
     <p class="fine sci-fine">Small lab studies of 11 to 21 people each. Findings across the wider research vary, and larger studies are still needed; in the two deep-sleep studies, deep-sleep waves grew stronger during the sound. Results from published sleep studies, not Droyma measurements or guaranteed outcomes. The 2024 study is a preprint, not yet peer reviewed.</p>
     <div class="sci-cta"><a class="link-cta" data-waitlist>Get early access <span aria-hidden="true">→</span></a></div>
   </section>
@@ -266,16 +267,19 @@
       <div>
         <details><summary>How does Droyma work, in plain words?</summary><p>In deep sleep, your brain moves in slow waves. Droyma senses those waves from behind your ear. At the right moment in each one, it plays a very soft sound through bone conduction, which helps the wave run deeper. Night by night, it learns your timing. Sleep labs have studied this method, called acoustic stimulation, for over a decade.</p></details>
         <details><summary>Is it another sleep tracker?</summary><p>No. Trackers tell you how you slept. Droyma is designed to change how you sleep. There&rsquo;s no new score to chase. The difference is meant to show up in how you feel the next day.</p></details>
-        <details><summary>I already wear an Oura or WHOOP. Why Droyma?</summary><p>Keep it. It&rsquo;s good at telling you how a night went. Droyma is the one built to fix the night while it&rsquo;s happening, with soft, timed sound that deepens your sleep, drug-free.</p></details>
         <details><summary>Will I hear it? Will my partner?</summary><p>The sound travels through bone rather than the air. It&rsquo;s designed to be barely audible to you, soft enough to sleep through, and not to fill the room.</p></details>
-        <details><summary>Is it comfortable to sleep in?</summary><p>Droyma is designed to sit behind your ear all night, with nothing over your head or face. Comfort testing is part of development before launch.</p></details>
-        <details><summary>Is it safe?</summary><p>Droyma uses very soft sound at low intensity. It&rsquo;s still in development and will be safety-tested before it ships. If you&rsquo;re always tired, snore heavily or stop breathing at night, talk to a doctor first. Droyma is a wellness product for better sleep, not a treatment for insomnia or any sleep disorder.</p></details>
-        <details><summary>What happens to my brain data?</summary><p>Your sleep signals are used to time Droyma&rsquo;s sound. Before anything ships, we&rsquo;ll publish exactly what&rsquo;s stored, where, and how to delete it.</p></details>
         <details><summary>Is it proven?</summary><p>The method is. Timed sound during sleep has been studied in sleep labs for over a decade, with the results shown above. Droyma itself is still in development, so we won&rsquo;t claim results until we&rsquo;ve tested it. We&rsquo;ll share our own test results with the waitlist, whatever they show.</p></details>
-        <details><summary>Short nights, broken nights, new time zones?</summary><p>It can&rsquo;t add hours or reset your body clock. It&rsquo;s designed to make the hours you get count: deeper sleep, fewer wake-ups. Home, hotel or a new time zone, it goes where you go.</p></details>
-        <details><summary>I&rsquo;m a light sleeper. Won&rsquo;t a sound wake me?</summary><p>It&rsquo;s designed to play only in deep sleep, when you&rsquo;re hardest to wake, to stay softer than the sounds that disturb you, and to go quiet if you start to stir.</p></details>
-        <details><summary>Can I stop taking melatonin or sleep supplements?</summary><p>Talk to your doctor before changing anything you take. Melatonin is a workaround, not a fix. It comes with side effects like next-day drowsiness, headaches, dizziness and vivid dreams (<a href="https://www.nccih.nih.gov/health/melatonin-what-you-need-to-know" target="_blank" rel="noreferrer">NIH</a>). Droyma is drug-free, but it isn&rsquo;t a replacement for treatment.</p></details>
         <details><summary>When can I get one, and what does joining get me?</summary><p>Droyma is in development. First units go to the waitlist. You&rsquo;ll also get prototype updates and hear launch pricing before anyone else. Joining is free: no payment, no spam.</p></details>
+        <div class="faq-more" id="faqMore" hidden>
+          <details><summary>I already wear an Oura or WHOOP. Why Droyma?</summary><p>Keep it. It&rsquo;s good at telling you how a night went. Droyma is the one built to fix the night while it&rsquo;s happening, with soft, timed sound that deepens your sleep, drug-free.</p></details>
+          <details><summary>Is it comfortable to sleep in?</summary><p>Droyma is designed to sit behind your ear all night, with nothing over your head or face. Comfort testing is part of development before launch.</p></details>
+          <details><summary>Is it safe?</summary><p>Droyma uses very soft sound at low intensity. It&rsquo;s still in development and will be safety-tested before it ships. If you&rsquo;re always tired, snore heavily or stop breathing at night, talk to a doctor first. Droyma is a wellness product for better sleep, not a treatment for insomnia or any sleep disorder.</p></details>
+          <details><summary>What happens to my brain data?</summary><p>Your sleep signals are used to time Droyma&rsquo;s sound. Before anything ships, we&rsquo;ll publish exactly what&rsquo;s stored, where, and how to delete it.</p></details>
+          <details><summary>Short nights, broken nights, new time zones?</summary><p>It can&rsquo;t add hours or reset your body clock. It&rsquo;s designed to make the hours you get count: deeper sleep, fewer wake-ups. Home, hotel or a new time zone, it goes where you go.</p></details>
+          <details><summary>I&rsquo;m a light sleeper. Won&rsquo;t a sound wake me?</summary><p>It&rsquo;s designed to play only in deep sleep, when you&rsquo;re hardest to wake, to stay softer than the sounds that disturb you, and to go quiet if you start to stir.</p></details>
+          <details><summary>Can I stop taking melatonin or sleep supplements?</summary><p>Talk to your doctor before changing anything you take. Melatonin is a workaround, not a fix. It comes with side effects like next-day drowsiness, headaches, dizziness and vivid dreams (<a href="https://www.nccih.nih.gov/health/melatonin-what-you-need-to-know" target="_blank" rel="noreferrer">NIH</a>). Droyma is drug-free, but it isn&rsquo;t a replacement for treatment.</p></details>
+        </div>
+        <button type="button" class="faq-toggle" aria-expanded="false" aria-controls="faqMore">More questions (7)</button>
       </div>
     </div>
   </section>
@@ -288,14 +292,19 @@
         <div class="uv-content">
           <div class="uv-head">
             <p class="mono mono-light">WHY SLEEP MATTERS</p>
-            <h2 class="h2">You'll spend about <span class="ly-26">26 years</span> asleep.</h2>
+            <h2 class="h2">While you sleep, your brain is hard at work.</h2>
           </div>
-          <div class="ly-grid" id="lyGrid" role="img" aria-label="80 dots, one for each year of a life. 26 of them light up: the years spent asleep."></div>
-          <div class="ly-key uv-late" aria-hidden="true"><span><i class="k-sleep"></i>Asleep</span><span><i class="k-awake"></i>Awake</span><em>Each dot is one year of an 80-year life.</em></div>
+          <div class="uv-facts" aria-live="polite">
+            <div class="uv-fact"><strong>Memory</strong><p>Deep sleep is when your brain moves the day into long-term memory.</p><small>Diekelmann &amp; Born, Nature Reviews Neuroscience, 2010</small></div>
+            <div class="uv-fact"><strong>60%</strong><p>more space opens between brain cells in sleep, so fluid can flush out waste like beta-amyloid.</p><small>Xie et al., Science, 2013 (study in mice)</small></div>
+            <div class="uv-fact"><strong>9%</strong><p>better shooting, and faster sprints, when Stanford basketball players slept more.</p><small>Mah et al., Sleep, 2011</small></div>
+            <div class="uv-fact"><strong>2 nights</strong><p>Two weeks of 6-hour nights dulled focus as much as up to two nights with no sleep at all. Most people didn&rsquo;t notice.</p><small>Van Dongen et al., Sleep, 2003</small></div>
+          </div>
+          <div class="uv-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
         </div>
-        <div class="uv-final" aria-label="Every night shows up the next day: in how you think, how patient you are, what you remember. Shortchange those 26 years, and the other 54 pay for it.">
-          <p class="uvf-a" data-words>Every night shows up the next day: in how you think, how patient you are, what you remember.</p>
-          <p class="uvf-b" data-words>Shortchange those 26 years, and the other 54 pay for it.</p>
+        <div class="uv-final" aria-label="Sleep isn't time off. It's when your brain does its most important work.">
+          <p class="uvf-a" data-words>Sleep isn&rsquo;t time off.</p>
+          <p class="uvf-b" data-words>It&rsquo;s when your brain does its most important work.</p>
         </div>
       </div>
     </div>
@@ -336,7 +345,7 @@
   </div>
 </footer>
 
-<script src="site.js?v=18"></script>
+<script src="site.js?v=19"></script>
 <div class="wl" id="wl" role="dialog" aria-modal="true" aria-labelledby="wlTitle" hidden>
   <div class="wl-back" data-wl-close></div>
   <form class="wl-card" id="wlForm" novalidate>
@@ -393,6 +402,6 @@
   </form>
 </div>
 
-<script src="waitlist.js?v=18"></script>
+<script src="waitlist.js?v=19"></script>
 </body>
 </html>

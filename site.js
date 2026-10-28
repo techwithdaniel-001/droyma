@@ -121,39 +121,30 @@
 
   // ---------- Why sleep: portal → stars become the years of a life ----------
   const uv = document.getElementById("why-sleep");
-  const lyGrid = document.getElementById("lyGrid");
-  if (uv && lyGrid) {
+  const uvFacts = uv ? [...uv.querySelectorAll(".uv-fact")] : [];
+  if (uv && uvFacts.length) {
     const portal = document.getElementById("uvPortal");
     const head = uv.querySelector(".uv-head");
-    const late = [...uv.querySelectorAll(".uv-late")];
     const content = uv.querySelector(".uv-content");
+    const uvDots = [...uv.querySelectorAll(".uv-dots i")];
     const finalWords = [];
     uv.querySelectorAll("[data-words]").forEach((el) => {
       el.setAttribute("aria-hidden", "true");
       el.innerHTML = el.textContent.split(" ").map((w) => `<span class="fw">${w}</span>`).join(" ");
       finalWords.push(...el.querySelectorAll(".fw"));
     });
-    const dots = [];
-    for (let y = 0; y < 80; y++) {
-      const d = document.createElement("i");
-      if (y < 26) { d.className = "sleep"; d.style.setProperty("--s", `${y * 60}ms`); }
-      lyGrid.append(d);
-      // Each year starts as a star somewhere in the sky.
-      const a = Math.random() * Math.PI * 2, r = .45 + Math.random() * .75;
-      dots.push({ d, sx: Math.cos(a) * r, sy: Math.sin(a) * r, delay: Math.random() * .25 });
-    }
     // Starfield canvas.
     const cv = document.getElementById("uvStars"), cx = cv.getContext("2d");
     const stars = Array.from({ length: 260 }, () => ({ a: Math.random() * Math.PI * 2, r: Math.random(), z: .2 + Math.random() * .8, tw: Math.random() * 6 }));
     const sizeCv = () => { const dpr = Math.min(2, devicePixelRatio || 1); cv.width = cv.clientWidth * dpr; cv.height = cv.clientHeight * dpr; cx.setTransform(dpr, 0, 0, dpr, 0, 0); };
     window.addEventListener("resize", sizeCv); sizeCv();
-    let up = 0, uvOn = false, lit = false;
+    let up = 0, uvOn = false, factIdx = -1;
     const ease = (x) => 1 - Math.pow(1 - clamp(x), 3);
     const drawStars = (now) => {
       const W = cv.clientWidth, H = cv.clientHeight, R = Math.hypot(W, H) / 2;
       cx.clearRect(0, 0, W, H);
-      const warp = 1 - ease(up / .4);           // fast while the portal opens, still afterwards
-      const fade = 1 - ease((up - .35) / .3) * .7; // dim as the years take over
+      const warp = 1 - ease(up / .3);
+      const fade = 1 - ease((up - .3) / .3) * .6;
       for (const s of stars) {
         s.r += .0016 * s.z * (1 + warp * 14);
         if (s.r > 1.05) s.r = .02;
@@ -169,29 +160,26 @@
       const r = uv.getBoundingClientRect();
       up = reduced ? 1 : clamp(-r.top / Math.max(1, uv.offsetHeight - vh()));
       // 1 · the portal opens
-      const open = ease(up / .3);
-      portal.style.clipPath = up >= .3 ? "none" : `circle(${4 + open * 76}% at 50% 50%)`;
-      head.style.opacity = String(ease((up - .1) / .2));
-      head.style.transform = `translateY(${(1 - ease((up - .1) / .25)) * 50}px) scale(${.92 + .08 * ease((up - .1) / .25)})`;
-      // 2 · stars gather into the years of a life
-      const W = innerWidth, H = innerHeight;
-      dots.forEach((o) => {
-        const k = ease((up - .26 - o.delay * .4) / .24);
-        o.d.style.transform = `translate(${o.sx * W * (1 - k)}px, ${o.sy * H * (1 - k)}px) scale(${.25 + .75 * k})`;
-        o.d.style.opacity = String(.25 + .75 * k);
-      });
-      // 3 · 26 years light up, then the statement
-      const nowLit = up > .58;
-      if (nowLit !== lit) { lit = nowLit; lyGrid.classList.toggle("lit", lit); }
-      late.forEach((e) => { e.style.opacity = String(ease((up - .6) / .1)); });
-      // 4 · the years step back; the statement takes the whole screen, word by word.
-      const out = ease((up - .74) / .08);
+      const open = ease(up / .22);
+      portal.style.clipPath = up >= .22 ? "none" : `circle(${4 + open * 76}% at 50% 50%)`;
+      head.style.opacity = String(ease((up - .08) / .14));
+      head.style.transform = `translateY(${(1 - ease((up - .08) / .18)) * 40}px)`;
+      // 2 · four findings, one at a time
+      const i = reduced ? uvFacts.length - 1 : Math.max(0, Math.min(uvFacts.length - 1, Math.floor((up - .2) / (.56 / uvFacts.length))));
+      if (i !== factIdx) {
+        factIdx = i;
+        uvFacts.forEach((f, j) => f.classList.toggle("is-on", j === i));
+        uvDots.forEach((d, j) => d.classList.toggle("on", j <= i));
+      }
+      content.querySelector(".uv-facts").style.opacity = String(ease((up - .16) / .08));
+      // 3 · the findings step back; the statement takes the screen, word by word.
+      const out = ease((up - .78) / .06);
       content.style.opacity = String(1 - out);
-      content.style.transform = `scale(${1 - out * .08}) translateY(${-out * 30}px)`;
-      const fp = clamp((up - .8) / .17);
+      content.style.transform = `scale(${1 - out * .06}) translateY(${-out * 24}px)`;
+      const fp = clamp((up - .82) / .15);
       const nLit = fp * finalWords.length;
-      finalWords.forEach((w, i) => w.classList.toggle("lit", i < nLit));
-      uv.querySelector(".uv-final").style.opacity = String(ease((up - .76) / .06));
+      finalWords.forEach((w, k) => w.classList.toggle("lit", k < nLit));
+      uv.querySelector(".uv-final").style.opacity = String(ease((up - .8) / .05));
     };
     const uvLoop = (now) => { if (!uvOn) return; drawStars(now); requestAnimationFrame(uvLoop); };
     window.addEventListener("scroll", () => { if (uvOn) renderUv(); }, { passive: true });
@@ -326,4 +314,21 @@
     else new IntersectionObserver(([e]) => { running = e.isIntersecting; last = 0; if (running) { fromScroll(); requestAnimationFrame(loop); } }, { threshold: 0 }).observe(night);
   }
 
+})();
+
+// Progressive disclosure: FAQ and research.
+(() => {
+  const fb = document.querySelector(".faq-toggle[aria-controls='faqMore']"), more = document.getElementById("faqMore");
+  if (fb && more) fb.addEventListener("click", () => {
+    more.hidden = !more.hidden; fb.setAttribute("aria-expanded", String(!more.hidden));
+    fb.textContent = more.hidden ? `More questions (${more.querySelectorAll("details").length})` : "Fewer questions";
+  });
+  const sb = document.querySelector(".sci-more"), grid = document.getElementById("sciGrid");
+  if (sb && grid) sb.addEventListener("click", () => {
+    const extra = grid.querySelectorAll(".sx-extra"), show = extra[0] && extra[0].hidden;
+    extra.forEach((e) => { e.hidden = !show; });
+    grid.classList.toggle("s3x-two", !show);
+    sb.setAttribute("aria-expanded", String(show));
+    sb.textContent = show ? "Show less" : "View more research";
+  });
 })();
