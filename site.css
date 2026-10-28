@@ -1602,3 +1602,6 @@ html.wl-open { overflow: hidden; }
   .cmp-v1 .c-row > div:first-child { left: -16px; }
   .cmp-v1 .c-row > .c-us { left: 100px; }
 }
+
+/* Hidden dialog must never catch taps */
+.wl[hidden] { display: none !important; }
