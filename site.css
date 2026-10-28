@@ -1340,3 +1340,20 @@ button { font: inherit; color: inherit; }
 .sx-bars span { white-space: nowrap; }
 .sx footer a { white-space: nowrap; }
 @media (max-width: 600px) { .sx-bars { height: 110px; gap: 18px; grid-template-columns: repeat(2, minmax(0, 100px)); } }
+
+/* Science: three studies */
+@media (min-width: 1000px) { .s3x-3 { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 700px) and (max-width: 999px) { .s3x-3 { grid-template-columns: 1fr 1fr; } }
+.s3x-3 .sx { min-height: 520px; padding: 28px 26px 24px; }
+.s3x-3 .sx-big strong { font-size: clamp(84px, 7.4vw, 120px); }
+.s3x-3 .sx-big span { font-size: 16px; }
+.s3x-3 .sx-did { font-size: clamp(19px, 1.6vw, 22px); }
+.sx-time { display: grid; gap: 16px; }
+.sx-time div { display: grid; gap: 7px; }
+.sx-time span { font-size: 13px; color: var(--ink-3); }
+.sx-time .on span { color: var(--ink); font-weight: 500; }
+.sx-time i { display: block; height: 14px; border-radius: 8px; width: var(--w); background: #e6e6e3; transform-origin: left; transform: scaleX(0); transition: transform 1.2s var(--ease); }
+.sx-time .on i { background: #0d1b2e; transition-delay: .2s; }
+.s3x.in .sx-time i { transform: scaleX(1); }
+.s3x-3 .sx-bars { grid-template-columns: repeat(2, minmax(0, 100px)); gap: 20px; }
+.s3x-3 .sx-wave { height: 96px; }
