@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"></head><body>
+<title>Sleep Window</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one narrow column like a bedside notebook; a 20:00→12:00 night axis is the recurring visual. */
+:root {
+  --bg: #0d1020; --surface: #151a30; --surface-2: #1c2240; --line: #2a3156;
+  --fg: #e9e7f2; --fg-2: #a9abc6; --fg-3: #7d80a0;
+  --accent: #f2b45a; --accent-ink: #1a1206; --asleep: #8ea2ff; --inbed: #333d6b;
+  --good: #6fd3a4; --warn: #f2b45a; --bad: #ff8a8a;
+  --display: "Young Serif", Georgia, "Times New Roman", serif;
+  --body: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) {
+  --bg: #f1f0f6; --surface: #ffffff; --surface-2: #e8e7f1; --line: #d6d5e4;
+  --fg: #171a2e; --fg-2: #4b4f6c; --fg-3: #6c708c;
+  --accent: #b86e10; --accent-ink: #ffffff; --asleep: #3f52c8; --inbed: #c9cde8;
+  --good: #187a52; --warn: #a3600b; --bad: #b3261e; color-scheme: light; } }
+:root[data-theme="light"] {
+  --bg: #f1f0f6; --surface: #ffffff; --surface-2: #e8e7f1; --line: #d6d5e4;
+  --fg: #171a2e; --fg-2: #4b4f6c; --fg-3: #6c708c;
+  --accent: #b86e10; --accent-ink: #ffffff; --asleep: #3f52c8; --inbed: #c9cde8;
+  --good: #187a52; --warn: #a3600b; --bad: #b3261e; color-scheme: light; }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font: 16px/1.55 var(--body); margin: 0; }
+.wrap { max-width: 720px; margin: 0 auto; padding-inline: 16px; padding-block: 20px 64px; display: grid; gap: 20px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 400; text-wrap: balance; margin: 0; line-height: 1.15; }
+h1 { font-size: 1.6rem; } h2 { font-size: 1.35rem; } h3 { font-size: 1.1rem; }
+p { margin: 0; } .muted { color: var(--fg-2); } .small { font-size: .875rem; }
+.label { font: 600 .72rem/1 var(--body); letter-spacing: .1em; text-transform: uppercase; color: var(--fg-3); }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.stack { display: grid; gap: 12px; } .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+header.top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.moon { width: 26px; height: 26px; border-radius: 50%; box-shadow: inset -7px -3px 0 0 var(--accent); }
+.save { font-size: .8rem; color: var(--fg-3); }
+
+nav.tabs { display: grid; grid-template-columns: repeat(4, 1fr); background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 4px; gap: 4px; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; }
+nav.tabs button { font: 600 .9rem var(--body); color: var(--fg-2); background: none; border: 0; border-radius: 9px; padding: 10px 4px; cursor: pointer; }
+nav.tabs button[aria-selected="true"] { background: var(--surface-2); color: var(--fg); }
+
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: grid; gap: 14px; min-width: 0; }
+.hero { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 22px 18px; display: grid; gap: 16px; }
+.window-times { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.window-times .t { font: 400 clamp(2rem, 8vw, 2.8rem)/1 var(--display); }
+.window-times .dash { color: var(--fg-3); font-size: 1.4rem; }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; }
+.stat { background: var(--surface-2); border-radius: 10px; padding: 10px 12px; display: grid; gap: 4px; }
+.stat b { font: 500 1.15rem var(--mono); font-variant-numeric: tabular-nums; }
+
+.banner { border: 1px dashed var(--accent); color: var(--fg); border-radius: 12px; padding: 12px 14px; font-size: .92rem; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+.warnbox { border-left: 3px solid var(--warn); background: var(--surface-2); padding: 12px 14px; border-radius: 0 10px 10px 0; font-size: .92rem; }
+
+button.btn { font: 600 .95rem var(--body); border-radius: 10px; padding: 11px 16px; cursor: pointer; border: 1px solid var(--line); background: var(--surface-2); color: var(--fg); }
+button.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+button.btn.ghost { background: none; }
+button.btn:disabled { opacity: .5; cursor: not-allowed; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Night axis */
+.axis { position: relative; height: 18px; }
+.axis span { position: absolute; transform: translateX(-50%); font: .7rem var(--mono); color: var(--fg-3); }
+.nights { display: grid; gap: 8px; }
+.night { display: grid; grid-template-columns: 54px 1fr 52px; gap: 10px; align-items: center; }
+.night .d { font: .78rem var(--mono); color: var(--fg-2); }
+.night .se { font: .8rem var(--mono); text-align: right; }
+.track { position: relative; height: 16px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.track .bed { position: absolute; top: 0; bottom: 0; background: var(--inbed); }
+.track .sl { position: absolute; top: 3px; bottom: 3px; background: var(--asleep); border-radius: 3px; }
+.track .win { position: absolute; top: 0; bottom: 0; border-left: 1.5px solid var(--accent); border-right: 1.5px solid var(--accent); }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: .78rem; color: var(--fg-2); }
+.legend i { display: inline-block; width: 12px; height: 8px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+.se.good { color: var(--good); } .se.ok { color: var(--warn); } .se.low { color: var(--bad); }
+
+/* Forms */
+form.grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px 14px; }
+.f { display: grid; gap: 6px; min-width: 0; }
+.f.full { grid-column: 1 / -1; }
+.f label { font-size: .85rem; color: var(--fg-2); }
+input, select, textarea { font: 1rem var(--body); color: var(--fg); background: var(--surface-2); border: 1px solid var(--line); border-radius: 9px; padding: 10px 11px; width: 100%; min-width: 0; }
+textarea { min-height: 76px; resize: vertical; }
+.scale { display: flex; gap: 6px; flex-wrap: wrap; }
+.scale label { display: flex; align-items: center; justify-content: center; min-width: 42px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 9px; cursor: pointer; font-size: .88rem; color: var(--fg-2); background: var(--surface-2); }
+.scale input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.scale input:checked + span { color: var(--fg); }
+.scale label:has(input:checked) { border-color: var(--accent); color: var(--fg); }
+.scale label:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Program */
+.sess { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.sess > summary { list-style: none; cursor: pointer; padding: 14px 16px; display: grid; grid-template-columns: 34px 1fr auto; gap: 12px; align-items: center; }
+.sess > summary::-webkit-details-marker { display: none; }
+.sess .n { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font: 500 .85rem var(--mono); background: var(--surface-2); color: var(--fg-2); }
+.sess.done .n { background: var(--good); color: var(--bg); }
+.sess .body { padding: 0 16px 16px; display: grid; gap: 12px; max-width: 65ch; }
+.sess ul, .card ul, .card ol { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.chip { font: 600 .72rem var(--body); letter-spacing: .06em; text-transform: uppercase; padding: 4px 8px; border-radius: 99px; background: var(--surface-2); color: var(--fg-2); white-space: nowrap; }
+
+.thought { border-top: 1px solid var(--line); padding-top: 12px; display: grid; gap: 4px; font-size: .92rem; }
+.timer { font: 400 3rem/1 var(--display); font-variant-numeric: tabular-nums; }
+footer { font-size: .8rem; color: var(--fg-3); display: grid; gap: 6px; max-width: 65ch; }
+.isi-q { display: grid; gap: 8px; padding-block: 10px; border-top: 1px solid var(--line); }
+.isi-q:first-of-type { border-top: 0; }
+@media (max-width: 480px) {
+  form.grid { grid-template-columns: 1fr; }
+  .stats { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 6px; }
+  .stat { padding: 8px; } .stat b { font-size: 1rem; }
+  .night { grid-template-columns: 44px 1fr 44px; gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><div class="moon" aria-hidden="true"></div><div><h1>Sleep Window</h1><p class="small muted">A 6-week CBT-I program, test build</p></div></div>
+    <span class="save" id="saveState">Saved in this browser</span>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button role="tab" id="t-today" aria-selected="true" data-tab="today">Tonight</button>
+    <button role="tab" id="t-diary" aria-selected="false" data-tab="diary">Diary</button>
+    <button role="tab" id="t-program" aria-selected="false" data-tab="program">Program</button>
+    <button role="tab" id="t-tools" aria-selected="false" data-tab="tools">Tools</button>
+  </nav>
+
+  <!-- TONIGHT -->
+  <section id="p-today" class="stack" role="tabpanel" aria-labelledby="t-today">
+    <div class="banner" id="exampleBanner" hidden>
+      <span>You're looking at <b>example nights</b>. Log your first night and they'll disappear.</span>
+      <button class="btn primary" data-go="diary">Log last night</button>
+    </div>
+
+    <div class="hero">
+      <div class="row" style="justify-content:space-between">
+        <span class="label">Your sleep window tonight</span>
+        <span class="chip" id="windowLen">—</span>
+      </div>
+      <div class="window-times"><span class="t mono" id="winBed">—</span><span class="dash">to</span><span class="t mono" id="winWake">—</span></div>
+      <p class="muted" id="winNote">Log at least 5 nights to set your window.</p>
+      <div class="stats">
+        <div class="stat"><span class="label">Asleep</span><b id="sTst">—</b></div>
+        <div class="stat"><span class="label">Efficiency</span><b id="sSe">—</b></div>
+        <div class="stat"><span class="label">To fall asleep</span><b id="sSol">—</b></div>
+      </div>
+      <p class="small muted">7-night averages. Efficiency is time asleep divided by time in bed. The goal is 85% or more.</p>
+      <div class="row">
+        <button class="btn primary" id="setWindow">Set my window</button>
+        <button class="btn" id="reviewWeek">Review my week</button>
+      </div>
+      <p class="small" id="reviewMsg" hidden></p>
+    </div>
+
+    <div class="card">
+      <div class="row" style="justify-content:space-between"><h3>Last 7 nights</h3><button class="btn ghost small" data-go="diary">All nights</button></div>
+      <div id="axisToday" class="axis"></div>
+      <div id="nightsToday" class="nights"></div>
+      <div class="legend"><span><i style="background:var(--inbed)"></i>In bed</span><span><i style="background:var(--asleep)"></i>Asleep</span><span><i style="border:1.5px solid var(--accent);background:none"></i>Your window</span></div>
+    </div>
+
+    <div class="card">
+      <h3>Tonight's rules</h3>
+      <ol>
+        <li>Go to bed only when you feel <b>sleepy</b>, and not before <span class="mono" id="ruleBed">your window</span>.</li>
+        <li>Can't sleep after about 20 minutes? Get up, go somewhere dim, and come back when you're sleepy. Use <a href="#" data-go="tools">the tool for this</a>.</li>
+        <li>Use the bed only for sleep and sex. No phone, no TV, no working.</li>
+        <li>Get up at <span class="mono" id="ruleWake">your wake time</span> every day, however you slept. Weekends too.</li>
+        <li>No naps, or keep any nap under 30 minutes and before 3 PM.</li>
+      </ol>
+    </div>
+
+    <div class="card" id="isiCard">
+      <div class="row" style="justify-content:space-between"><h3>How bad is your insomnia?</h3><span class="chip" id="isiChip">Not taken</span></div>
+      <p class="muted small">The Insomnia Severity Index (Morin, 1993). Take it on day 1 and again at week 6 to see what changed.</p>
+      <div id="isiHistory" class="small muted"></div>
+      <div class="row"><button class="btn" id="isiStart">Take the 7 questions</button></div>
+      <form id="isiForm" hidden></form>
+    </div>
+  </section>
+
+  <!-- DIARY -->
+  <section id="p-diary" class="stack" role="tabpanel" aria-labelledby="t-diary" hidden>
+    <div class="card">
+      <h2>Log last night</h2>
+      <p class="muted small">Fill this in within an hour of getting up. Rough guesses are fine. Don't check the clock during the night to get them.</p>
+      <form class="grid" id="diaryForm" autocomplete="off">
+        <div class="f full"><label for="dDate">Night of</label><input type="date" id="dDate" required></div>
+        <div class="f"><label for="dBed">Got into bed</label><input type="time" id="dBed" value="23:00" required></div>
+        <div class="f"><label for="dLights">Tried to sleep</label><input type="time" id="dLights" value="23:15" required></div>
+        <div class="f"><label for="dSol">Minutes to fall asleep</label><input type="number" id="dSol" min="0" max="600" value="30" inputmode="numeric" required></div>
+        <div class="f"><label for="dWakes">Times you woke up</label><input type="number" id="dWakes" min="0" max="30" value="2" inputmode="numeric" required></div>
+        <div class="f"><label for="dWaso">Total minutes awake during the night</label><input type="number" id="dWaso" min="0" max="900" value="40" inputmode="numeric" required></div>
+        <div class="f"><label for="dFinal">Final wake-up</label><input type="time" id="dFinal" value="06:30" required></div>
+        <div class="f"><label for="dUp">Got out of bed</label><input type="time" id="dUp" value="06:45" required></div>
+        <div class="f full"><span class="small muted" id="qLabel">How restful was it?</span>
+          <div class="scale" role="radiogroup" aria-labelledby="qLabel">
+            <label><input type="radio" name="q" value="1" id="q1"><span>Awful</span></label>
+            <label><input type="radio" name="q" value="2" id="q2"><span>Poor</span></label>
+            <label><input type="radio" name="q" value="3" id="q3" checked><span>OK</span></label>
+            <label><input type="radio" name="q" value="4" id="q4"><span>Good</span></label>
+            <label><input type="radio" name="q" value="5" id="q5"><span>Great</span></label>
+          </div>
+        </div>
+        <div class="f full"><label for="dNote">Anything that affected it? (optional)</label><input type="text" id="dNote" placeholder="Coffee at 4 PM, late work email, noisy street…"></div>
+        <div class="f full"><p class="small muted" id="diaryPreview"></p></div>
+        <div class="f full row"><button class="btn primary" type="submit">Save night</button><span class="small" id="diaryMsg" role="status"></span></div>
+      </form>
+    </div>
+
+    <div class="card">
+      <h3>All nights</h3>
+      <div id="axisAll" class="axis"></div>
+      <div id="nightsAll" class="nights"></div>
+      <p class="small muted" id="nightsEmpty" hidden>No nights yet.</p>
+    </div>
+  </section>
+
+  <!-- PROGRAM -->
+  <section id="p-program" class="stack" role="tabpanel" aria-labelledby="t-program" hidden>
+    <div class="card">
+      <div class="row" style="justify-content:space-between"><h2>Your 6 weeks</h2><span class="chip" id="progChip">0 of 6</span></div>
+      <p class="muted small">One short session a week, about 10 minutes each. The diary and the window do most of the work, and the sessions explain why.</p>
+    </div>
+    <div id="sessions" class="stack"></div>
+  </section>
+
+  <!-- TOOLS -->
+  <section id="p-tools" class="stack" role="tabpanel" aria-labelledby="t-tools" hidden>
+    <div class="card">
+      <h2>Awake and can't sleep?</h2>
+      <p class="muted">Lying there trying harder teaches your brain that bed is a place for being awake. Break that link.</p>
+      <ol>
+        <li>Get up and go to another room. Keep the lights low.</li>
+        <li>Do something quiet and dull: a paper book, folding laundry, a puzzle. No screens, no clock watching.</li>
+        <li>Go back to bed only when your eyes feel heavy.</li>
+        <li>Still awake after a while? Repeat. It's normal for this to happen a few times in the first week.</li>
+      </ol>
+      <div class="row"><span class="timer mono" id="timer" aria-live="polite">20:00</span></div>
+      <p class="small muted">Use this as a rough guide only. The timer is for after you've gone back to bed, so you don't have to look at a clock.</p>
+      <div class="row"><button class="btn primary" id="timerBtn">Start 20 minutes</button><button class="btn" id="timerReset">Reset</button></div>
+    </div>
+
+    <div class="card">
+      <h2>Worry time</h2>
+      <p class="muted">Do this in the early evening, not in bed. Write down what's on your mind and one next step. When it comes back at night, remind yourself you've already dealt with it today.</p>
+      <form class="grid" id="thoughtForm" autocomplete="off">
+        <div class="f full"><label for="tWorry">What's on your mind?</label><textarea id="tWorry" required placeholder="I'll be useless at the meeting tomorrow if I don't sleep."></textarea></div>
+        <div class="f full"><label for="tEvidence">What actually happened the last time you slept badly?</label><textarea id="tEvidence" placeholder="I was tired, but the meeting went fine."></textarea></div>
+        <div class="f full"><label for="tBalanced">A more balanced thought</label><textarea id="tBalanced" placeholder="One bad night makes me tired, not useless. I've coped before."></textarea></div>
+        <div class="f full"><label for="tStep">One next step (or "nothing to do tonight")</label><input id="tStep" type="text" placeholder="Prep 3 bullet points at 9 AM."></div>
+        <div class="f full row"><button class="btn primary" type="submit">Park it</button><span class="small" id="thoughtMsg" role="status"></span></div>
+      </form>
+      <div id="thoughts" class="stack"></div>
+    </div>
+
+    <div class="card">
+      <h2>Wind-down, last hour</h2>
+      <p class="muted small">A buffer between your day and your bed. Tick what you did tonight. Nothing is saved; it's just a checklist.</p>
+      <div class="stack" id="windList"></div>
+    </div>
+  </section>
+
+  <footer>
+    <p><b>This is a test build, not medical advice.</b> CBT-I is the first-line treatment for chronic insomnia in clinical guidelines. This prototype follows its standard parts but hasn't been clinically tested.</p>
+    <p>Don't use the sleep window without a clinician if you have bipolar disorder, seizures, untreated sleep apnea, or are pregnant. Feeling very sleepy is common in weeks 1 and 2. Don't drive or use machinery when drowsy.</p>
+    <p id="storeNote"></p>
+  </footer>
+</div>
+
+<script>
+(() => {
+  // ---------- time helpers ----------
+  const toMin = (t) => { const [h, m] = String(t || "0:0").split(":").map(Number); return (h || 0) * 60 + (m || 0); };
+  const span = (a, b) => (b - a + 1440) % 1440;                 // minutes from clock a to clock b
+  const clock = (m) => { m = ((Math.round(m) % 1440) + 1440) % 1440; const h = Math.floor(m / 60), mm = m % 60; const ap = h >= 12 ? "PM" : "AM"; return `${(h % 12) || 12}:${String(mm).padStart(2, "0")} ${ap}`; };
+  const hm = (m) => { m = Math.round(m); return `${Math.floor(m / 60)}h ${String(m % 60).padStart(2, "0")}m`; };
+  const r15 = (m) => Math.round(m / 15) * 15;
+  const MIN_WINDOW = 330; // 5.5 h floor, a common safe choice
+
+  const calc = (e) => {
+    const tib = span(toMin(e.bed), toMin(e.up)) || 1440;
+    const period = span(toMin(e.lights), toMin(e.final));
+    const tst = Math.max(0, period - (+e.sol || 0) - (+e.waso || 0));
+    return { tib, tst, se: Math.min(100, (tst / tib) * 100) };
+  };
+
+  // ---------- example data (shown only while the diary is empty) ----------
+  const iso = (d) => d.toISOString().slice(0, 10);
+  const dayAgo = (n) => { const d = new Date(); d.setDate(d.getDate() - n); return iso(d); };
+  const EXAMPLE = [
+    ["23:00", "23:20", 55, 3, 70, "06:10", "07:00", 2],
+    ["22:45", "23:00", 40, 2, 50, "06:20", "07:00", 2],
+    ["23:30", "23:40", 25, 2, 45, "06:30", "07:00", 3],
+    ["22:30", "22:45", 70, 4, 90, "05:50", "07:00", 1],
+    ["23:15", "23:30", 35, 2, 40, "06:35", "07:00", 3],
+    ["23:00", "23:10", 45, 3, 60, "06:15", "07:00", 2],
+    ["23:45", "23:50", 20, 1, 30, "06:40", "07:00", 4],
+  ].map((r, i) => ({ date: dayAgo(7 - i), bed: r[0], lights: r[1], sol: r[2], wakes: r[3], waso: r[4], final: r[5], up: r[6], q: r[7], note: "", example: true }));
+
+  // ---------- state + storage ----------
+  const blank = () => ({ v: 1, entries: [], wake: "06:45", window: null, windowLog: [], sessions: {}, isi: [], thoughts: [] });
+  let S = blank();
+  let dbRef = null, writing = false, pending = false, saveTimer = 0;
+  const LS = "sleepWindow.v1";
+  const saveEl = document.getElementById("saveState");
+
+  const loadLocal = () => { try { const raw = localStorage.getItem(LS); if (raw) return { ...blank(), ...JSON.parse(raw) }; } catch (e) {} return null; };
+  const saveLocal = () => { try { localStorage.setItem(LS, JSON.stringify(S)); } catch (e) {} };
+
+  const flush = async () => {
+    if (!dbRef) return;
+    if (writing) { pending = true; return; }
+    writing = true; saveEl.textContent = "Saving…";
+    try { await dbRef.set(JSON.parse(JSON.stringify(S))); saveEl.textContent = "Saved to your account"; }
+    catch (e) { saveEl.textContent = "Couldn't save to your account. Saved in this browser."; }
+    writing = false;
+    if (pending) { pending = false; flush(); }
+  };
+  const save = () => { saveLocal(); clearTimeout(saveTimer); saveTimer = setTimeout(flush, 600); };
+
+  const local = loadLocal(); if (local) S = local;
+
+  (async () => {
+    try {
+      if (!window.claude?.use) return;
+      const [db, user] = await Promise.all([claude.use("db"), claude.use("user")]);
+      if (!db || !user) return;
+      const id = await user.id(); if (!id) return;
+      dbRef = db.collection("data/users/" + id).doc("sleepwindow");
+      const snap = await dbRef.get();
+      if (snap.exists) { S = { ...blank(), ...snap.data() }; saveLocal(); render(); }
+      else if (S.entries.length || S.isi.length) { flush(); }
+      saveEl.textContent = "Saved to your account";
+      document.getElementById("storeNote").textContent = "Your diary is saved privately to your Claude account. Only you can see it.";
+    } catch (e) {}
+  })();
+
+  // ---------- derived ----------
+  const entries = () => (S.entries.length ? S.entries : EXAMPLE).slice().sort((a, b) => a.date.localeCompare(b.date));
+  const isExample = () => !S.entries.length;
+  const last7 = () => entries().slice(-7);
+  const avg = (list, f) => list.length ? list.reduce((s, e) => s + f(e), 0) / list.length : 0;
+  const win = () => S.window ?? (isExample() ? r15(avg(last7(), (e) => calc(e).tst)) : null);
+
+  // ---------- night track ----------
+  const AX0 = 20 * 60, AXW = 16 * 60;               // 8 PM to 12 PM
+  const pos = (t) => Math.min(100, Math.max(0, (span(AX0, toMin(t)) / AXW) * 100));
+  const axis = (el) => { el.innerHTML = ["8p", "10p", "12a", "2a", "4a", "6a", "8a", "10a", "12p"].map((l, i) => `<span style="left:${(i * 12.5)}%">${l}</span>`).join(""); };
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const nightRow = (e, w) => {
+    const c = calc(e);
+    const sleepStart = clockAdd(e.lights, +e.sol || 0);
+    const bedL = pos(e.bed), bedR = pos(e.up), slL = pos(sleepStart), slR = pos(e.final);
+    const wake = toMin(S.wake);
+    const winHtml = w ? `<div class="win" style="left:${pos(clockStr(wake - w))}%;width:${Math.max(0, pos(S.wake) - pos(clockStr(wake - w)))}%"></div>` : "";
+    const cls = c.se >= 85 ? "good" : c.se >= 75 ? "ok" : "low";
+    const d = new Date(e.date + "T12:00"); const lab = d.toLocaleDateString(undefined, { weekday: "short", day: "numeric" });
+    return `<div class="night" title="${esc(`${hm(c.tst)} asleep of ${hm(c.tib)} in bed${e.note ? " · " + e.note : ""}`)}">
+      <span class="d">${lab}</span>
+      <div class="track" role="img" aria-label="${esc(`${lab}: in bed ${clock(toMin(e.bed))} to ${clock(toMin(e.up))}, ${hm(c.tst)} asleep`)}">
+        <div class="bed" style="left:${bedL}%;width:${Math.max(0, bedR - bedL)}%"></div>
+        <div class="sl" style="left:${slL}%;width:${Math.max(0, slR - slL)}%;opacity:${Math.max(.45, 1 - (+e.waso || 0) / 240)}"></div>
+        ${winHtml}
+      </div>
+      <span class="se ${cls}">${Math.round(c.se)}%</span></div>`;
+  };
+  const clockStr = (m) => { m = ((m % 1440) + 1440) % 1440; return `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`; };
+  const clockAdd = (t, add) => clockStr(toMin(t) + add);
+
+  // ---------- render ----------
+  const $ = (id) => document.getElementById(id);
+  function render() {
+    const l7 = last7(), w = win(), wake = toMin(S.wake);
+    $("exampleBanner").hidden = !isExample();
+    $("sTst").textContent = l7.length ? hm(avg(l7, (e) => calc(e).tst)) : "—";
+    $("sSe").textContent = l7.length ? Math.round(avg(l7, (e) => calc(e).se)) + "%" : "—";
+    $("sSol").textContent = l7.length ? Math.round(avg(l7, (e) => +e.sol || 0)) + " min" : "—";
+    if (w) {
+      $("winBed").textContent = clock(wake - w); $("winWake").textContent = clock(wake);
+      $("windowLen").textContent = hm(w) + " in bed";
+      $("winNote").textContent = isExample()
+        ? "Example only. Your window is set from your own diary."
+        : "Don't get into bed before the first time. Get up at the second time every day.";
+      $("ruleBed").textContent = clock(wake - w); $("ruleWake").textContent = clock(wake);
+    } else {
+      $("winBed").textContent = "—"; $("winWake").textContent = clock(wake); $("windowLen").textContent = "Not set";
+      const n = S.entries.length;
+      $("winNote").textContent = n >= 5 ? "You have enough nights. Set your window." : `Log ${5 - n} more night${5 - n === 1 ? "" : "s"} to set your window. Keep your usual routine for now.`;
+      $("ruleBed").textContent = "your window"; $("ruleWake").textContent = clock(wake);
+    }
+    $("setWindow").disabled = S.entries.length < 5;
+    $("setWindow").textContent = S.window ? "Reset my window" : "Set my window";
+    $("reviewWeek").disabled = !S.window;
+    axis($("axisToday")); $("nightsToday").innerHTML = l7.map((e) => nightRow(e, w)).join("");
+    const all = S.entries.slice().sort((a, b) => b.date.localeCompare(a.date));
+    axis($("axisAll")); $("nightsAll").innerHTML = all.map((e) => nightRow(e, w)).join(""); $("nightsEmpty").hidden = !!all.length;
+    // ISI
+    const last = S.isi[S.isi.length - 1];
+    $("isiChip").textContent = last ? `${last.score} · ${isiBand(last.score)}` : "Not taken";
+    $("isiHistory").innerHTML = S.isi.length ? S.isi.map((r) => `<span class="mono">${r.date}</span>: ${r.score}/28, ${isiBand(r.score).toLowerCase()}`).join("<br>") : "";
+    $("isiStart").textContent = S.isi.length ? "Take it again" : "Take the 7 questions";
+    renderSessions(); renderThoughts();
+  }
+
+  // ---------- window ----------
+  $("setWindow").onclick = () => {
+    const real = S.entries.slice().sort((a, b) => a.date.localeCompare(b.date)).slice(-7);
+    const wakes = real.map((e) => toMin(e.up)).sort((a, b) => a - b);
+    S.wake = clockStr(r15(wakes[Math.floor(wakes.length / 2)]));
+    S.window = Math.max(MIN_WINDOW, r15(avg(real, (e) => calc(e).tst)));
+    S.windowLog.push({ date: iso(new Date()), window: S.window, reason: "start" });
+    $("reviewMsg").hidden = false;
+    $("reviewMsg").textContent = `Window set to ${hm(S.window)}, your average sleep time (never less than 5h 30m). Wake time ${clock(toMin(S.wake))} comes from your usual get-up time.`;
+    save(); render();
+  };
+  $("reviewWeek").onclick = () => {
+    const se = avg(S.entries.slice().sort((a, b) => a.date.localeCompare(b.date)).slice(-7), (e) => calc(e).se);
+    let delta = 0, msg;
+    if (se >= 90) { delta = 15; msg = `Efficiency ${Math.round(se)}%. You're sleeping most of the time you're in bed, so you earn 15 more minutes. Go to bed 15 minutes earlier.`; }
+    else if (se >= 85) { msg = `Efficiency ${Math.round(se)}%. Right on target. Keep the same window for another week.`; }
+    else { delta = S.window - 15 >= MIN_WINDOW ? -15 : 0; msg = delta ? `Efficiency ${Math.round(se)}%. You're awake in bed a lot, so the window shrinks by 15 minutes. Go to bed 15 minutes later.` : `Efficiency ${Math.round(se)}%. Your window is already at the 5h 30m floor, so it stays. Keep following the rules.`; }
+    S.window += delta; S.windowLog.push({ date: iso(new Date()), window: S.window, se: Math.round(se) });
+    $("reviewMsg").hidden = false; $("reviewMsg").textContent = msg; save(); render();
+  };
+
+  // ---------- diary ----------
+  $("dDate").value = dayAgo(1);
+  const readDiary = () => ({ date: $("dDate").value, bed: $("dBed").value, lights: $("dLights").value, sol: +$("dSol").value, wakes: +$("dWakes").value, waso: +$("dWaso").value, final: $("dFinal").value, up: $("dUp").value, q: +(document.querySelector('input[name="q"]:checked')?.value || 3), note: $("dNote").value.trim() });
+  const preview = () => { const c = calc(readDiary()); $("diaryPreview").textContent = `That's about ${hm(c.tst)} asleep out of ${hm(c.tib)} in bed, ${Math.round(c.se)}% efficiency.`; };
+  $("diaryForm").addEventListener("input", preview); preview();
+  $("diaryForm").onsubmit = (ev) => {
+    ev.preventDefault();
+    const e = readDiary();
+    const c = calc(e);
+    if (span(toMin(e.lights), toMin(e.final)) < (+e.sol + +e.waso)) { $("diaryMsg").textContent = "The minutes awake add up to more than the night. Check the times."; return; }
+    S.entries = S.entries.filter((x) => x.date !== e.date).concat(e);
+    save(); render();
+    $("diaryMsg").textContent = `Saved. ${hm(c.tst)} asleep, ${Math.round(c.se)}% efficiency.`;
+    const d = new Date(e.date + "T12:00"); d.setDate(d.getDate() + 1); if (d < new Date()) $("dDate").value = iso(d);
+  };
+
+  // ---------- ISI ----------
+  const ISI = [
+    ["Difficulty falling asleep", ["None", "Mild", "Moderate", "Severe", "Very severe"]],
+    ["Difficulty staying asleep", ["None", "Mild", "Moderate", "Severe", "Very severe"]],
+    ["Waking up too early", ["None", "Mild", "Moderate", "Severe", "Very severe"]],
+    ["How satisfied are you with your current sleep?", ["Very satisfied", "Satisfied", "Neutral", "Dissatisfied", "Very dissatisfied"]],
+    ["How noticeable to others is the way your sleep affects your life?", ["Not at all", "A little", "Somewhat", "Much", "Very much"]],
+    ["How worried or distressed are you about your sleep?", ["Not at all", "A little", "Somewhat", "Much", "Very much"]],
+    ["How much does your sleep get in the way of your day right now (energy, mood, focus, work)?", ["Not at all", "A little", "Somewhat", "Much", "Very much"]],
+  ];
+  const isiBand = (s) => s <= 7 ? "No insomnia" : s <= 14 ? "Mild" : s <= 21 ? "Moderate" : "Severe";
+  const isiForm = $("isiForm");
+  isiForm.innerHTML = ISI.map(([q, opts], i) => `<div class="isi-q"><span class="small" id="isi${i}l">${i + 1}. ${q}</span><div class="scale" role="radiogroup" aria-labelledby="isi${i}l">${opts.map((o, v) => `<label><input type="radio" name="isi${i}" id="isi${i}_${v}" value="${v}" required><span>${o}</span></label>`).join("")}</div></div>`).join("")
+    + `<div class="row" style="margin-top:10px"><button class="btn primary" type="submit">See my score</button><button class="btn ghost" type="button" id="isiCancel">Cancel</button></div>`;
+  $("isiStart").onclick = () => { isiForm.hidden = false; $("isiStart").hidden = true; };
+  $("isiCancel").onclick = () => { isiForm.hidden = true; $("isiStart").hidden = false; };
+  isiForm.onsubmit = (ev) => {
+    ev.preventDefault();
+    const score = ISI.reduce((s, _, i) => s + +(isiForm.querySelector(`input[name="isi${i}"]:checked`)?.value || 0), 0);
+    S.isi.push({ date: iso(new Date()), score }); isiForm.reset(); isiForm.hidden = true; $("isiStart").hidden = false; save(); render();
+  };
+
+  // ---------- program ----------
+  const SESSIONS = [
+    ["How sleep actually works", "Week 1", `<p>Two systems decide when you sleep. <b>Sleep drive</b> builds the longer you're awake, like hunger. Your <b>body clock</b> sets the times of day you feel alert or sleepy.</p><p>Insomnia usually starts with stress, then sticks around because of what we do to cope: going to bed early, lying in late, napping, lying awake trying. Each one weakens sleep drive or confuses the clock.</p>`, ["Log your sleep diary every morning this week.", "Keep your usual routine. Don't change anything yet.", "Take the 7-question score on the Tonight tab."]],
+    ["Your sleep window", "Week 2", `<p>The most powerful part of CBT-I. If you sleep 6 hours but spend 8 in bed, you get 2 hours of lying awake, and your brain learns bed means awake.</p><p>So you shrink time in bed to match the sleep you're actually getting. Sleep drive builds up, sleep gets deeper and more solid, and then you earn time back 15 minutes at a time.</p><div class="warnbox">Expect to feel more tired for the first 1 to 2 weeks. That's the method working. Don't drive when drowsy.</div>`, ["Tap \"Set my window\" on the Tonight tab.", "Don't go to bed before the start of your window, even if you feel tired earlier.", "Get up at your wake time every day."]],
+    ["Bed is for sleep", "Week 3", `<p>This is called stimulus control. If you often lie in bed worrying, scrolling or watching the clock, your bed becomes a cue for being awake. The rules retrain that link.</p>`, ["Only go to bed when sleepy, not just tired.", "Awake for about 20 minutes? Get up, and come back when sleepy.", "Bed only for sleep and sex. Turn the clock away from you."]],
+    ["Quieting a busy mind", "Week 4", `<p>A racing mind at night is often the day's unfinished business. Give it a time slot earlier in the evening, so bedtime isn't the first quiet moment you've had.</p><p>Also try <b>cognitive shuffling</b>: pick a random word like "planet", and for each letter picture simple unrelated things (pear, piano, parrot…). It keeps the mind busy without letting it worry.</p>`, ["Do 15 minutes of Worry time in the Tools tab each evening.", "Start a 30 to 60 minute wind-down before your window.", "Try cognitive shuffling when you wake at night."]],
+    ["Thoughts that keep you up", "Week 5", `<p>Some beliefs about sleep make it harder: "I need 8 hours or tomorrow is ruined", "I have to make up for lost sleep". They raise the stakes, and pressure keeps you awake.</p><p>Check them against what actually happens. Most people with insomnia get more sleep than they think, and cope better after a bad night than they fear.</p>`, ["When a sleep worry shows up, write the evidence for and against it.", "Notice one day this week that went fine after a poor night.", "Stop trying to sleep. Rest, and let sleep come."]],
+    ["Keeping it going", "Week 6", `<p>You've finished the core program. Keep the wake time fixed, and keep earning time in bed back while efficiency stays above 85 to 90%.</p><p>Bad nights will still happen after stress or travel. Don't go back to the old coping habits. Go back to the window and the rules for a week or two, and sleep usually settles again.</p>`, ["Take the 7-question score again and compare.", "Write down your personal plan for the next bad patch.", "Keep logging for 2 more weeks, then stop if you're happy."]],
+  ];
+  function renderSessions() {
+    const done = Object.keys(S.sessions).filter((k) => S.sessions[k]).length;
+    $("progChip").textContent = `${done} of 6`;
+    const host = $("sessions"); const open = [...host.querySelectorAll("details[open]")].map((d) => d.dataset.i);
+    host.innerHTML = SESSIONS.map(([t, wk, body, todo], i) => {
+      const d = !!S.sessions[i + 1];
+      return `<details class="sess${d ? " done" : ""}" data-i="${i}" ${open.includes(String(i)) ? "open" : ""}>
+        <summary><span class="n">${d ? "✓" : i + 1}</span><span><span class="label">${wk}</span><br><b>${t}</b></span><span class="chip">${d ? "Done" : "10 min"}</span></summary>
+        <div class="body">${body}<div><span class="label">This week</span><ul style="margin-top:8px">${todo.map((x) => `<li>${x}</li>`).join("")}</ul></div>
+        <div class="row"><button class="btn ${d ? "" : "primary"}" data-sess="${i + 1}">${d ? "Mark as not done" : "Mark as done"}</button></div></div></details>`;
+    }).join("");
+  }
+  $("sessions").addEventListener("click", (e) => { const b = e.target.closest("[data-sess]"); if (!b) return; const k = b.dataset.sess; S.sessions[k] = !S.sessions[k]; save(); renderSessions(); });
+
+  // ---------- tools ----------
+  let tLeft = 1200, tInt = 0;
+  const tDraw = () => { $("timer").textContent = `${String(Math.floor(tLeft / 60)).padStart(2, "0")}:${String(tLeft % 60).padStart(2, "0")}`; };
+  $("timerBtn").onclick = () => {
+    if (tInt) { clearInterval(tInt); tInt = 0; $("timerBtn").textContent = "Resume"; return; }
+    $("timerBtn").textContent = "Pause";
+    tInt = setInterval(() => { tLeft = Math.max(0, tLeft - 1); tDraw(); if (!tLeft) { clearInterval(tInt); tInt = 0; $("timer").textContent = "Get up"; $("timerBtn").textContent = "Start 20 minutes"; tLeft = 1200; } }, 1000);
+  };
+  $("timerReset").onclick = () => { clearInterval(tInt); tInt = 0; tLeft = 1200; tDraw(); $("timerBtn").textContent = "Start 20 minutes"; };
+
+  function renderThoughts() {
+    $("thoughts").innerHTML = S.thoughts.slice().reverse().slice(0, 8).map((t) => `<div class="thought"><span class="label">${esc(t.date)}</span><span>${esc(t.worry)}</span>${t.balanced ? `<span class="muted">→ ${esc(t.balanced)}</span>` : ""}${t.step ? `<span class="small muted">Next step: ${esc(t.step)}</span>` : ""}</div>`).join("");
+  }
+  $("thoughtForm").onsubmit = (ev) => {
+    ev.preventDefault();
+    S.thoughts.push({ date: iso(new Date()), worry: $("tWorry").value.trim(), evidence: $("tEvidence").value.trim(), balanced: $("tBalanced").value.trim(), step: $("tStep").value.trim() });
+    ev.target.reset(); $("thoughtMsg").textContent = "Parked. You've dealt with it for today."; save(); renderThoughts();
+  };
+  $("windList").innerHTML = ["Dim the lights", "Phone on charge outside the bedroom", "Something calm: reading, stretching, a shower", "Write tomorrow's to-do list", "Room cool, dark and quiet"]
+    .map((x, i) => `<label class="row" for="w${i}" style="gap:10px;cursor:pointer"><input type="checkbox" id="w${i}" style="width:auto"> <span>${x}</span></label>`).join("");
+
+  // ---------- tabs ----------
+  const tabs = [...document.querySelectorAll("nav.tabs button")];
+  const show = (name) => {
+    tabs.forEach((b) => b.setAttribute("aria-selected", String(b.dataset.tab === name)));
+    ["today", "diary", "program", "tools"].forEach((n) => { $("p-" + n).hidden = n !== name; });
+    window.scrollTo({ top: 0 });
+  };
+  tabs.forEach((b) => b.onclick = () => show(b.dataset.tab));
+  document.addEventListener("click", (e) => { const g = e.target.closest("[data-go]"); if (g) { e.preventDefault(); show(g.dataset.go); } });
+  if (["diary", "program", "tools"].includes(location.hash.slice(1))) show(location.hash.slice(1));
+
+  render();
+})();
+</script>
+
+</body></html>
